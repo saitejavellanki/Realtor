@@ -1,0 +1,227 @@
+.properties-page {
+  padding: 30px;
+  background: #f4f6f9;
+  min-height: 100vh;
+}
+
+/* Top bar */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 10px 15px;
+  border-radius: 12px;
+  gap: 10px;
+  width: 300px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+.filters select {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+/* Header */
+.properties-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.properties-header h2 {
+  margin: 0;
+}
+
+.properties-header p {
+  color: gray;
+  font-size: 14px;
+}
+
+.add-btn {
+  background: #1f66e5;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+/* ===== TABLE WRAPPER ===== */
+.table-container {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ===== TABLE ===== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Header Row */
+thead {
+  background: #f3f4f6;
+}
+
+th {
+  padding: 16px 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Body Rows */
+td {
+  padding: 18px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  color: #374151;
+}
+
+/* Remove last row border */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Row Hover */
+tbody tr:hover {
+  background: #fafafa;
+}
+
+/* Checkbox spacing */
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== STATUS BADGES ===== */
+.badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.available {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.sold {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.reserved {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+/* ===== ACTION ICONS ===== */
+.actions {
+  display: flex;
+  gap: 14px;
+  color: #6b7280;
+  cursor: pointer;
+}
+
+.actions svg:hover {
+  color: #111827;
+}
+
+/* ===== PAGINATION ===== */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.pages button {
+  border: none;
+  padding: 8px 12px;
+  margin-left: 6px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pages button:hover {
+  background: #e5e7eb;
+}
+
+.pages .active {
+  background: #1f66e5;
+  color: white;
+}
+
+/* Base Badge Style */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+/* AVAILABLE - Green */
+.badge.available {
+    background-color: #e6f9f0;
+    color: #0f9d58;
+    border: 1px solid #b7f0d2;
+}
+
+/* SOLD - Red */
+.badge.sold {
+    background-color: #ffeaea;
+    color: #e53935;
+    border: 1px solid #ffb3b3;
+}
+
+/* RESERVED - Orange */
+.badge.reserved {
+    background-color: #fff4e5;
+    color: #fb8c00;
+    border: 1px solid #ffd699;
+}
+
+.badge.available {
+    background: linear-gradient(135deg, #00c853, #69f0ae);
+    color: white;
+}
+
+.badge.sold {
+    background: linear-gradient(135deg, #d50000, #ff5252);
+    color: white;
+}
+
+.badge.reserved {
+    background: linear-gradient(135deg, #ff6d00, #ffab40);
+    color: white;
+}

@@ -1,0 +1,142 @@
+.dashboard {
+  padding: 30px;
+  background: #f4f6f9;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Header */
+.header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  background: #f4f6f9;
+}
+
+/* Search */
+.search-bar {
+  width: 420px;
+  height: 48px;
+  background: #ffffff;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  width: 100%;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.search-icon {
+  color: #9ca3af;
+}
+
+/* Stats */
+.stats {
+  display: flex;
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.stat-card p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.stat-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  background: #e8f0fe;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Property List */
+.property-list {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.property-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f1f2f4;
+  border-radius: 20px;
+  padding: 25px 30px;
+}
+
+.property-image {
+  width: 140px;
+  height: 100px;
+  background: #bfbfbf;
+  border-radius: 16px;
+}
+
+.property-details {
+  flex: 1;
+  margin-left: 30px;
+}
+
+.property-details h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.property-meta {
+  display: flex;
+  gap: 60px;
+}
+
+.property-meta span {
+  font-size: 12px;
+  color: #7c7c7c;
+}
+
+.property-meta p {
+  font-size: 13px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.available {
+  color: #16a34a;
+}
+
+.property-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f66e5;
+}
+
+.property-price span {
+  font-size: 12px;
+  color: #7c7c7c;
+  font-weight: 400;
+}
