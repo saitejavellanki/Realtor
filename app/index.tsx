@@ -1,6 +1,21 @@
-import HomeScreen from "../components/HomeScreen";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
+import { View } from "react-native";
+import { getToken } from "../utils/authStorage";
 
-// Temporary: bypass auth and go straight to the main home experience.
 export default function Index() {
-  return <HomeScreen />;
+  const router = useRouter();
+
+  useEffect(() => {
+    getToken().then(token => {
+      if (token) {
+        router.replace("/home");
+      } else {
+        router.replace("/auth");
+      }
+    });
+  }, []);
+
+  // Blank white screen while SecureStore check runs (instant on device)
+  return <View style={{ flex: 1, backgroundColor: "#ffffff" }} />;
 }

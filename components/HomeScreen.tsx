@@ -3803,7 +3803,7 @@ const s = StyleSheet.create({
   root: { flex: 1, alignSelf: "center", backgroundColor: "#FFFFFF", overflow: "hidden" },
   topArea: { backgroundColor: "rgba(255,255,255,0.98)", borderBottomWidth: 1, borderBottomColor: "rgba(0,0,0,0.06)", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 8, zIndex: 20, paddingBottom: 12 },
   topAreaFloat: { position: "absolute", left: 0, right: 0, zIndex: 50, elevation: 50 },
-  searchRow: { flexDirection: "row", alignItems: "center", backgroundColor: "rgba(0,0,0,0.04)", borderWidth: 1, borderColor: "rgba(0,0,0,0.08)", shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 12, elevation: 6 },
+  searchRow: { flexDirection: "row", alignItems: "center", backgroundColor: "#FFFFFF", borderWidth: 1, borderColor: "rgba(0,0,0,0.1)", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 6, elevation: 2 },
   searchLeft: { flexDirection: "row", alignItems: "center", flex: 1 },
   searchInput: { flex: 1, fontSize: 14, fontFamily: "Manrope_400Regular", color: "#222222", letterSpacing: 0.3, paddingVertical: 0 },
   divider: { width: 1, backgroundColor: "rgba(0,0,0,0.08)" },

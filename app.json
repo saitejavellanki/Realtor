@@ -1,17 +1,19 @@
 {
   "expo": {
-    "name": "real-estate",
-    "slug": "real-estate",
+    "name": "Realtor",
+    "slug": "realtor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "realestate",
+    "scheme": "realtor",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.saitejavellanki.realtor"
     },
     "android": {
+      "package": "com.saitejavellanki.realtor",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -45,6 +47,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8d6a92ef-f64e-43f2-9c1d-b9ca2e4be0cf"
+      }
     }
   }
 }
