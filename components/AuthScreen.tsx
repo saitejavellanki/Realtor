@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from "react-native";
 import Svg, { Circle, Path, Rect } from "react-native-svg";
@@ -140,6 +141,8 @@ interface AuthScreenProps {
 }
 
 export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = false, error = null }: AuthScreenProps) {
+  const { height } = useWindowDimensions();
+  const isSmall = height < 700; // iPhone SE / compact screens
   const [isSignUp, setIsSignUp] = useState(true);
 
   const [firstName, setFirstName] = useState("");
@@ -180,7 +183,7 @@ export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = 
           showsVerticalScrollIndicator={false}
         >
           {/* Header */}
-          <View style={s.header}>
+          <View style={[s.header, isSmall && { paddingTop: 32, paddingBottom: 16 }]}>
             <View style={s.logoRow}>
               <View style={s.logoBox}>
                 <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
@@ -297,7 +300,7 @@ export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = 
                     <GoogleIcon /><Text style={s.socialText}>Google</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={s.social} activeOpacity={0.8}>
-                    <AppleIcon /><Text style={s.socialText}>Apple</Text>
+                    <Text style={s.socialText}>Apple</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -353,7 +356,7 @@ export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = 
                     <GoogleIcon /><Text style={s.socialText}>Google</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={s.social} activeOpacity={0.8}>
-                    <AppleIcon /><Text style={s.socialText}>Apple</Text>
+                    <Text style={s.socialText}>Apple</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -379,11 +382,11 @@ export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = 
 
 const s = StyleSheet.create({
   root: { flex: 1, backgroundColor: "#FFF" },
-  scroll: { flexGrow: 1, paddingBottom: 40 },
+  scroll: { paddingBottom: 32 },
 
   header: {
-    paddingTop: Platform.OS === "ios" ? 64 : 48,
-    paddingHorizontal: 24, paddingBottom: 24,
+    paddingTop: Platform.OS === "ios" ? 60 : 44,
+    paddingHorizontal: 24, paddingBottom: 20,
   },
   logoRow: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: 24 },
   logoBox: {
@@ -441,7 +444,7 @@ const s = StyleSheet.create({
 
   bottom: {
     flexDirection: "row", justifyContent: "center", alignItems: "center",
-    marginTop: 20, paddingBottom: 10,
+    marginTop: 16, paddingBottom: 8,
   },
   bottomText: { fontSize: 13.5, fontFamily: "Manrope_400Regular", color: "#888" },
 });
