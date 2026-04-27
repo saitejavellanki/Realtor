@@ -41,7 +41,7 @@ export default function Sidebar() {
           </svg>
         </div>
         <div>
-          <div style={s.logoName}>PropAdmin</div>
+          <div style={s.logoName}>Realtor (Admin)</div>
           <div style={s.logoSub}>Real Estate Console</div>
         </div>
       </div>
