@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useWindowSize } from "../hooks/useWindowSize";
 import {
   FiCalendar,
   FiCheckCircle,
@@ -50,6 +51,8 @@ function KpiCard({ icon: Icon, color, bgColor, label, value, sub, trend }) {
 }
 
 export default function Dashboard() {
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
   const [stats, setStats] = useState(null);
   const [transparency, setTransparency] = useState(null);
   const [byStatus, setByStatus] = useState([]);
@@ -101,7 +104,7 @@ export default function Dashboard() {
   return (
     <div style={s.page}>
       {/* KPI Row */}
-      <div style={s.kpiGrid}>
+      <div style={{ ...s.kpiGrid, gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: isMobile ? 12 : 20 }}>
         <KpiCard icon={FiHome} color="#3b82f6" bgColor="#eff6ff" label="Total Properties" value={totalProps} sub="All time listings" trend={12} />
         <KpiCard icon={FiCheckCircle} color="#10b981" bgColor="#d1fae5" label="Available" value={available} sub={`${((available / Math.max(totalProps, 1)) * 100).toFixed(0)}% of total`} trend={4} />
         <KpiCard icon={FiTrendingUp} color="#8b5cf6" bgColor="#ede9fe" label="Sold" value={sold} sub="Completed deals" trend={-2} />
@@ -114,7 +117,7 @@ export default function Dashboard() {
           <div style={s.cardHeader}>
             <span style={s.cardTitle}>Transparency Overview (POC)</span>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 16, padding: 22 }}>
+          <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(5, 1fr)", gap: 12, padding: isMobile ? 14 : 22 }}>
             <TransparencyTile icon={FiShield} color="#059669" bg="#d1fae5" label="Verified" value={transparency.verified ?? 0} />
             <TransparencyTile icon={FiFileText} color="#3b82f6" bg="#eff6ff" label="With RERA" value={transparency.with_rera ?? 0} />
             <TransparencyTile icon={FiTrendingUp} color="#8b5cf6" bg="#ede9fe" label="Dual Rate Disclosed" value={transparency.with_dual_rate ?? 0} />
@@ -125,7 +128,7 @@ export default function Dashboard() {
       )}
 
       {/* Status breakdown + Recent */}
-      <div style={s.mid}>
+      <div style={{ ...s.mid, flexDirection: isMobile ? "column" : "row" }}>
         <div style={s.card}>
           <div style={s.cardHeader}>
             <span style={s.cardTitle}>Status Breakdown</span>
