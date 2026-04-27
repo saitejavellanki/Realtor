@@ -187,7 +187,7 @@ export default function AuthScreen({ onSignUp, onLogin, onGoogleAuth, loading = 
                   <Path d="M3 12L12 3L21 12V20C21 20.55 20.55 21 20 21H15V16H9V21H4C3.45 21 3 20.55 3 20V12Z" fill="#fff" stroke="#fff" strokeWidth={1.5} strokeLinejoin="round" />
                 </Svg>
               </View>
-              <Text style={s.logoText}>EstateHub</Text>
+              <Text style={s.logoText}>Realtor</Text>
             </View>
             <Text style={s.title}>{isSignUp ? "Create Account" : "Welcome Back"}</Text>
             <Text style={s.subtitle}>

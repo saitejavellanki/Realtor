@@ -183,7 +183,7 @@ export default function AboutScreen({ onBack }: { onBack: () => void }) {
                 <Polyline points="9 22 9 12 15 12 15 22" stroke="#1D1D1F" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" />
               </Svg>
             </View>
-            <Text style={[styles.heroTitle, { fontSize: fw(28) }]}>PropertyTrack</Text>
+            <Text style={[styles.heroTitle, { fontSize: fw(28) }]}>Realtor</Text>
             <Text style={[styles.heroVersion, { fontSize: fw(13), marginTop: fw(6) }]}>Version 1.0</Text>
             <Text style={[styles.heroSubtitle, { fontSize: fw(15), marginTop: fw(16), paddingHorizontal: fw(8) }]}>
               Real estate transparency, powered by verified data and intelligent analytics.
@@ -236,7 +236,7 @@ export default function AboutScreen({ onBack }: { onBack: () => void }) {
 
             <View style={[styles.infoCard, { padding: fw(18), borderRadius: fw(14) }]}>
               {[
-                { label: "Developer", value: "PropertyTrack Team" },
+                { label: "Developer", value: "Realtor" },
                 { label: "Platform", value: "iOS, Android, Web" },
                 { label: "Data Sources", value: "RERA, Government Records" },
                 { label: "AI Engine", value: "Claude by Anthropic" },
