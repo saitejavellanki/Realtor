@@ -4,6 +4,7 @@ import {
   FiChevronRight,
   FiGrid, FiHome,
   FiLogOut,
+  FiMap,
   FiPlusCircle,
   FiUsers,
 } from "react-icons/fi";
@@ -12,6 +13,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 const NAV = [
   { to: "/dashboard", icon: FiGrid, label: "Dashboard" },
   { to: "/properties", icon: FiHome, label: "Properties" },
+  { to: "/map", icon: FiMap, label: "Map View" },
   { to: "/add-property", icon: FiPlusCircle, label: "Add Property" },
   { to: "/developers", icon: FiUsers, label: "Developers" },
   { to: "/visits", icon: FiCalendar, label: "Visit Requests" },

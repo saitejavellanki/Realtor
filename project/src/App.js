@@ -5,6 +5,7 @@ import AddProperty from "./pages/Addproperties";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Developers from "./pages/Developers";
+import MapView from "./pages/MapView";
 import Properties from "./pages/Properties";
 import Visits from "./pages/Visits";
 
@@ -22,6 +23,7 @@ function App() {
         <Route path="/" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="properties" element={<Properties />} />
+          <Route path="map" element={<MapView />} />
           <Route path="add-property" element={<AddProperty />} />
           <Route path="developers" element={<Developers />} />
           <Route path="visits" element={<Visits />} />
