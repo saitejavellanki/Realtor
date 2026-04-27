@@ -13,8 +13,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+// In production, CORS is permissive — auth is JWT-based so cookies aren't relied on.
+// Mobile APKs send no Origin header (allowed by default); browsers get full access.
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:8081', 'http://localhost:19006', 'http://192.168.0.13:3011'],
+    origin: true,
     credentials: true,
 }));
 app.use(express.json());
