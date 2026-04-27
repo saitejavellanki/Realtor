@@ -916,6 +916,15 @@ const NriDashboardScreen = ({
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      {/* Watermark */}
+      <View style={StyleSheet.absoluteFill as any} pointerEvents="none">
+        <Text style={{
+          position: "absolute", top: "22%", left: -fw(20), right: -fw(20),
+          fontSize: fw(88), fontFamily: "Manrope_700Bold", color: "#000000",
+          opacity: 0.04, transform: [{ rotate: "-12deg" }],
+          textAlign: "center", lineHeight: fw(82), letterSpacing: -4,
+        }}>{"Invest\nSmart"}</Text>
+      </View>
       <ScrollView
         contentContainerStyle={{
           paddingTop: statusBarH + fw(14),
@@ -2494,6 +2503,15 @@ const ProfileScreen = ({
 
   return (
     <View style={[pS.root, { paddingBottom: NAV_SPACE }]}>
+      {/* Watermark */}
+      <View style={StyleSheet.absoluteFill as any} pointerEvents="none">
+        <Text style={{
+          position: "absolute", bottom: "18%", left: -fw(20), right: -fw(20),
+          fontSize: fw(96), fontFamily: "Manrope_700Bold", color: "#000000",
+          opacity: 0.04, transform: [{ rotate: "-12deg" }],
+          textAlign: "center", lineHeight: fw(88), letterSpacing: -4,
+        }}>{"Find\nHome"}</Text>
+      </View>
       {/* Header */}
       <View style={[pS.header, {
         paddingTop: statusBarH + fw(13),
