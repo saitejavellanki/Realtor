@@ -1,20 +1,7 @@
 // ─── Mobile App API Service ───────────────────────────────────────────────────
-// Dev: localhost backend on port 3011
-// Prod (eas build): hosted Render API
+// Always points to the hosted Render backend.
 
-import { Platform } from 'react-native';
-
-const PROD_URL = 'https://realtor-ldp0.onrender.com/api';
-
-// Web + iOS simulator can use localhost; Android emulator needs 10.0.2.2;
-// physical devices need the host machine's LAN IP.
-const DEV_HOST =
-    Platform.OS === 'web' ? 'localhost'
-    : Platform.OS === 'android' ? '10.0.2.2'
-    : '192.168.0.13';
-const DEV_URL = `http://${DEV_HOST}:3011/api`;
-
-const BASE_URL = __DEV__ ? DEV_URL : PROD_URL;
+const BASE_URL = 'https://realtor-ldp0.onrender.com/api';
 
 export type PropertyStatus = 'Available' | 'Sold' | 'Pending' | 'Reserved' | 'Draft';
 export type PropertyDemand = 'High demand' | 'Medium' | 'Low';
