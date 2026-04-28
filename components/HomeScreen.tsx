@@ -141,38 +141,41 @@ const ListViewIcon = ({ active }: { active: boolean }) => (
 // "€"€"€ Price Pin Marker "€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€
 const PricePinMarker = ({ price, selected }: { price: number; selected: boolean; type: string }) => {
   const label = `₹${price.toLocaleString("en-IN")}`;
-  const W = 76;
-  const H = 32;
-  const TAIL = 7;
-  const rx = 16;
-
-  // Flat colors only — no SVG gradient IDs, which conflict across multiple markers
-  // and cause pins to go invisible on Android.
-  const bg    = selected ? "#FF385C" : "#FFFFFF";
-  const text  = selected ? "#FFFFFF" : "#FF385C";
-  const border = selected ? "#E11D48" : "#FFCCDB";
-
+  // Pure View/Text — no SVG. SVG inside react-native-maps Marker is unreliable on
+  // Android Google Maps because the native snapshot can capture a blank frame.
   return (
-    <Svg width={W + 4} height={H + TAIL + 4}>
-      {/* Shadow */}
-      <Rect x={2} y={3} width={W} height={H} rx={rx} ry={rx} fill="rgba(0,0,0,0.12)" />
-      {/* Body */}
-      <Rect x={1} y={1} width={W} height={H} rx={rx} ry={rx} fill={bg} stroke={border} strokeWidth={1.5} />
-      {/* Tail */}
-      <Path
-        d={`M${W / 2 - 5} ${H + 1} L${W / 2} ${H + TAIL} L${W / 2 + 5} ${H + 1}`}
-        fill={bg} stroke={border} strokeWidth={1.5}
-      />
-      {/* Label */}
-      <SvgText
-        x={W / 2 + 1} y={H / 2 + 5}
-        fontSize={selected ? 12 : 11}
-        fontWeight={selected ? "800" : "700"}
-        fill={text} textAnchor="middle"
-      >
-        {label}
-      </SvgText>
-    </Svg>
+    <View style={{
+      alignItems: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.18,
+      shadowRadius: 4,
+      elevation: 4,
+    }}>
+      <View style={{
+        backgroundColor: selected ? "#FF385C" : "#FFFFFF",
+        borderRadius: 20,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
+        borderWidth: 1.5,
+        borderColor: selected ? "#E11D48" : "#FFCCDB",
+      }}>
+        <Text style={{
+          color: selected ? "#FFFFFF" : "#FF385C",
+          fontSize: selected ? 12 : 11,
+          fontWeight: "700",
+          fontFamily: "Manrope_700Bold",
+        }}>{label}</Text>
+      </View>
+      {/* Tail triangle */}
+      <View style={{
+        width: 0, height: 0,
+        borderLeftWidth: 5, borderRightWidth: 5, borderTopWidth: 6,
+        borderLeftColor: "transparent", borderRightColor: "transparent",
+        borderTopColor: selected ? "#E11D48" : "#FFCCDB",
+        marginTop: -1,
+      }} />
+    </View>
   );
 };
 
@@ -841,15 +844,6 @@ const NriDashboardScreen = ({
   return (
     <View style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
-      {/* Watermark */}
-      <View style={StyleSheet.absoluteFill as any} pointerEvents="none">
-        <Text style={{
-          position: "absolute", top: "22%", left: -fw(20), right: -fw(20),
-          fontSize: fw(88), fontFamily: "Manrope_700Bold", color: "#000000",
-          opacity: 0.04, transform: [{ rotate: "-12deg" }],
-          textAlign: "center", lineHeight: fw(82), letterSpacing: -4,
-        }}>{"Invest\nSmart"}</Text>
-      </View>
       <ScrollView
         contentContainerStyle={{
           paddingTop: statusBarH + fw(14),
@@ -2428,15 +2422,6 @@ const ProfileScreen = ({
 
   return (
     <View style={[pS.root, { paddingBottom: NAV_SPACE }]}>
-      {/* Watermark */}
-      <View style={StyleSheet.absoluteFill as any} pointerEvents="none">
-        <Text style={{
-          position: "absolute", bottom: "18%", left: -fw(20), right: -fw(20),
-          fontSize: fw(96), fontFamily: "Manrope_700Bold", color: "#000000",
-          opacity: 0.04, transform: [{ rotate: "-12deg" }],
-          textAlign: "center", lineHeight: fw(88), letterSpacing: -4,
-        }}>{"Find\nHome"}</Text>
-      </View>
       {/* Header */}
       <View style={[pS.header, {
         paddingTop: statusBarH + fw(13),
