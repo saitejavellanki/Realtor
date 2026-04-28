@@ -203,6 +203,15 @@ const MapViewScreen = ({
   const slideAnim = useRef(new Animated.Value(260)).current;
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const selectedProp = properties.find((p) => p.id === selectedId) ?? null;
+
+  // Start tracking so Android snapshots the markers after they render.
+  // Switch off after 3s to save battery — selected markers stay tracked always.
+  const [tracksViews, setTracksViews] = useState(true);
+  useEffect(() => {
+    const t = setTimeout(() => setTracksViews(false), 3000);
+    return () => clearTimeout(t);
+  }, []);
+
   // Guard: on Android, MapView.onPress fires right after Marker.onPress,
   // which would immediately hide the card we just showed.
   const markerJustPressed = useRef(false);
@@ -256,7 +265,7 @@ const MapViewScreen = ({
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
             anchor={{ x: 0.5, y: 1 }}
-            tracksViewChanges={false}
+            tracksViewChanges={tracksViews || selectedId === prop.id}
           >
             <PricePinMarker
               price={prop.pricePerSqft}
