@@ -139,116 +139,41 @@ const ListViewIcon = ({ active }: { active: boolean }) => (
 );
 
 // "€"€"€ Price Pin Marker "€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€
-const PricePinMarker = ({ price, selected, type }: { price: number; selected: boolean; type: string }) => {
-  const label = `₹${(price).toLocaleString("en-IN")}`;
+const PricePinMarker = ({ price, selected }: { price: number; selected: boolean; type: string }) => {
+  const label = `₹${price.toLocaleString("en-IN")}`;
   const W = 76;
   const H = 32;
   const TAIL = 7;
   const rx = 16;
-  
-  if (selected) {
-    // Premium selected state with gradient and enhanced glow
-    return (
-      <Svg width={W + 6} height={H + TAIL + 6}>
-        <Defs>
-          <SvgLinearGradient id="selectedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FF5C7C" stopOpacity={1} />
-            <Stop offset="100%" stopColor="#FF385C" stopOpacity={1} />
-          </SvgLinearGradient>
-          <SvgLinearGradient id="glowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FF385C" stopOpacity={0.3} />
-            <Stop offset="100%" stopColor="#FF385C" stopOpacity={0.1} />
-          </SvgLinearGradient>
-        </Defs>
-        
-        {/* Outer glow layer */}
-        <Rect x={0} y={0} width={W + 2} height={H} rx={rx} ry={rx}
-          fill="none" stroke="rgba(255, 56, 92, 0.2)" strokeWidth={3} opacity={0.5} />
-        
-        {/* Deep shadow */}
-        <Rect x={2} y={4} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="rgba(0,0,0,0.15)" />
-        
-        {/* Mid shadow */}
-        <Rect x={1} y={2} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="rgba(0,0,0,0.08)" />
-        
-        {/* Main body with gradient */}
-        <Rect x={1} y={1} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="url(#selectedGrad)" stroke="#E11D48" strokeWidth={0.5} />
-        
-        {/* Inner highlight for depth */}
-        <Rect x={2} y={1.5} width={W - 4} height={H / 2.5} rx={rx} ry={rx}
-          fill="rgba(255,255,255,0.25)" />
-        
-        {/* Tail with gradient */}
-        <Path
-          d={`M${W / 2 - 5} ${H - 1} L${W / 2} ${H + TAIL - 1} L${W / 2 + 5} ${H - 1}`}
-          fill="url(#selectedGrad)" stroke="#E11D48" strokeWidth={0.5}
-        />
-        
-        {/* Premium text */}
-        <SvgText
-          x={W / 2} y={H / 2 + 5}
-          fontSize={12} fontWeight="800"
-          fill="#FFFFFF" textAnchor="middle"
-          letterSpacing={0.3}
-        >
-          {label}
-        </SvgText>
-      </Svg>
-    );
-  } else {
-    // Premium inactive state with subtle gradients
-    return (
-      <Svg width={W + 6} height={H + TAIL + 6}>
-        <Defs>
-          <SvgLinearGradient id="inactiveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={1} />
-            <Stop offset="100%" stopColor="#F9FAFB" stopOpacity={1} />
-          </SvgLinearGradient>
-          <SvgLinearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFE4E9" stopOpacity={0.8} />
-            <Stop offset="100%" stopColor="#FFCCDB" stopOpacity={0.8} />
-          </SvgLinearGradient>
-        </Defs>
-        
-        {/* Enhanced layered shadow for depth */}
-        <Rect x={3} y={4} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="rgba(0,0,0,0.08)" />
-        
-        <Rect x={2} y={2.5} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="rgba(0,0,0,0.06)" />
-        
-        <Rect x={1} y={1} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="rgba(0,0,0,0.04)" />
-        
-        {/* Main body with gradient */}
-        <Rect x={1} y={1} width={W - 2} height={H - 2} rx={rx} ry={rx}
-          fill="url(#inactiveGrad)" stroke="url(#borderGrad)" strokeWidth={1.2} />
-        
-        {/* Inner subtle highlight */}
-        <Rect x={2} y={1.5} width={W - 4} height={H / 3} rx={rx} ry={rx}
-          fill="rgba(255,255,255,0.6)" />
-        
-        {/* Tail with gradient border */}
-        <Path
-          d={`M${W / 2 - 5} ${H - 1} L${W / 2} ${H + TAIL - 1} L${W / 2 + 5} ${H - 1}`}
-          fill="url(#inactiveGrad)" stroke="url(#borderGrad)" strokeWidth={1.2}
-        />
-        
-        {/* Premium text */}
-        <SvgText
-          x={W / 2} y={H / 2 + 5}
-          fontSize={11} fontWeight="700"
-          fill="#FF385C" textAnchor="middle"
-          letterSpacing={0.25}
-        >
-          {label}
-        </SvgText>
-      </Svg>
-    );
-  }
+
+  // Flat colors only — no SVG gradient IDs, which conflict across multiple markers
+  // and cause pins to go invisible on Android.
+  const bg    = selected ? "#FF385C" : "#FFFFFF";
+  const text  = selected ? "#FFFFFF" : "#FF385C";
+  const border = selected ? "#E11D48" : "#FFCCDB";
+
+  return (
+    <Svg width={W + 4} height={H + TAIL + 4}>
+      {/* Shadow */}
+      <Rect x={2} y={3} width={W} height={H} rx={rx} ry={rx} fill="rgba(0,0,0,0.12)" />
+      {/* Body */}
+      <Rect x={1} y={1} width={W} height={H} rx={rx} ry={rx} fill={bg} stroke={border} strokeWidth={1.5} />
+      {/* Tail */}
+      <Path
+        d={`M${W / 2 - 5} ${H + 1} L${W / 2} ${H + TAIL} L${W / 2 + 5} ${H + 1}`}
+        fill={bg} stroke={border} strokeWidth={1.5}
+      />
+      {/* Label */}
+      <SvgText
+        x={W / 2 + 1} y={H / 2 + 5}
+        fontSize={selected ? 12 : 11}
+        fontWeight={selected ? "800" : "700"}
+        fill={text} textAnchor="middle"
+      >
+        {label}
+      </SvgText>
+    </Svg>
+  );
 };
 
 // "€"€"€ Map View Screen "€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€
