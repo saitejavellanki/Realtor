@@ -148,33 +148,20 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
     : `₹${price}`;
 
   return (
-    <View collapsable={false} style={{ alignItems: "center" }}>
-      <View collapsable={false} style={{
+    <View
+      collapsable={false}
+      style={{
         backgroundColor: selected ? "#FF385C" : "#FFFFFF",
-        borderRadius: 20,
-        paddingHorizontal: 14,
-        paddingVertical: 7,
-        minWidth: 64,
+        borderRadius: 12,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
         borderWidth: 1.5,
-        borderColor: selected ? "#E11D48" : "#CCCCCC",
-        alignItems: "center",
-        justifyContent: "center",
-      }}>
-        <Text
-          numberOfLines={1}
-          style={{
-            color: selected ? "#FFFFFF" : "#222222",
-            fontSize: 12,
-            fontWeight: "700",
-            includeFontPadding: false,
-          }}
-        >{label}</Text>
-      </View>
-      <View collapsable={false} style={{
-        width: 6, height: 6, borderRadius: 3,
-        backgroundColor: selected ? "#FF385C" : "#999999",
-        marginTop: 2,
-      }} />
+        borderColor: selected ? "#C41230" : "#BBBBBB",
+      }}
+    >
+      <Text style={{ color: selected ? "#FFFFFF" : "#333333", fontSize: 11, fontWeight: "700" }}>
+        {label}
+      </Text>
     </View>
   );
 };
