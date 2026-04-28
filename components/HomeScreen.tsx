@@ -154,9 +154,8 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
         borderRadius: 20,
         paddingHorizontal: 12,
         paddingVertical: 6,
-        elevation: selected ? 6 : 4,
-        borderWidth: selected ? 0 : 1,
-        borderColor: "#DDDDDD",
+        borderWidth: 1.5,
+        borderColor: selected ? "#E11D48" : "#CCCCCC",
       }}>
         <Text style={{
           color: selected ? "#FFFFFF" : "#222222",
@@ -167,7 +166,7 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
       <View collapsable={false} style={{
         width: 6, height: 6, borderRadius: 3,
         backgroundColor: selected ? "#FF385C" : "#999999",
-        marginTop: 3,
+        marginTop: 2,
       }} />
     </View>
   );
