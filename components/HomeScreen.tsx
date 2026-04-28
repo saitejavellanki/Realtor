@@ -147,39 +147,27 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
     ? `₹${(price / 1000).toFixed(price % 1000 === 0 ? 0 : 1)}K`
     : `₹${price}`;
 
-  // collapsable={false} is critical on Android — without it React Native's view
-  // optimizer collapses the hierarchy and Google Maps captures a blank bitmap.
-  // Explicit width/height ensure the snapshot is taken on a fully laid-out view.
   return (
-    <View collapsable={false} style={{ alignItems: "center", width: 80, height: 50 }}>
-      {/* Pill */}
+    <View collapsable={false} style={{ alignItems: "center" }}>
       <View collapsable={false} style={{
         backgroundColor: selected ? "#FF385C" : "#FFFFFF",
-        borderRadius: 100,
-        paddingHorizontal: 11,
-        paddingVertical: 7,
-        width: 72,
-        height: 34,
-        alignItems: "center",
-        justifyContent: "center",
+        borderRadius: 20,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
         elevation: selected ? 6 : 4,
         borderWidth: selected ? 0 : 1,
-        borderColor: "#E0E0E0",
+        borderColor: "#DDDDDD",
       }}>
         <Text style={{
-          color: selected ? "#FFFFFF" : "#1A1A1A",
-          fontSize: 12,
-          fontWeight: "800",
-          letterSpacing: -0.3,
-          includeFontPadding: false,
+          color: selected ? "#FFFFFF" : "#222222",
+          fontSize: 11,
+          fontWeight: "700",
         }}>{label}</Text>
       </View>
-      {/* Anchor dot */}
       <View collapsable={false} style={{
-        width: 6, height: 6,
-        borderRadius: 3,
-        backgroundColor: selected ? "#FF385C" : "#AAAAAA",
-        marginTop: 4,
+        width: 6, height: 6, borderRadius: 3,
+        backgroundColor: selected ? "#FF385C" : "#999999",
+        marginTop: 3,
       }} />
     </View>
   );
@@ -264,7 +252,7 @@ const MapViewScreen = ({
             key={`${prop.id}-${selectedId === prop.id}`}
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
-            anchor={{ x: 0.5, y: 1 }}
+            anchor={{ x: 0.5, y: 0.9 }}
             tracksViewChanges={tracksViews || selectedId === prop.id}
           >
             <PricePinMarker
