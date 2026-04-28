@@ -24,7 +24,7 @@ import Svg, { Circle, Defs, Line, Path, Polygon, Polyline, Rect, Stop, LinearGra
 import { ChatMessage, clearChatHistory, getChatHistory, getComparables, getFraudCheck, getProfile, getProperties, getSavedIds, saveProperty, scheduleVisit, sendChatMessage, unsaveProperty, updateProfile } from "../utils/api";
 import { clearSession, getUser } from "../utils/authStorage";
 import AboutScreen from "./AboutScreen";
-import MapView, { Marker, PROVIDER_DEFAULT } from "./MapViewWrapper";
+import MapView, { Marker, PROVIDER_GOOGLE } from "./MapViewWrapper";
 
 // "€"€"€ Responsive system "€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€
 const FIGMA_W = 375;
@@ -147,25 +147,24 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
     ? `₹${(price / 1000).toFixed(price % 1000 === 0 ? 0 : 1)}K`
     : `₹${price}`;
 
+  // collapsable={false} is critical on Android — without it React Native's view
+  // optimizer collapses the hierarchy and Google Maps captures a blank bitmap.
+  // Explicit width/height ensure the snapshot is taken on a fully laid-out view.
   return (
-    <View style={{ alignItems: "center" }}>
+    <View collapsable={false} style={{ alignItems: "center", width: 80, height: 50 }}>
       {/* Pill */}
-      <View style={{
+      <View collapsable={false} style={{
         backgroundColor: selected ? "#FF385C" : "#FFFFFF",
         borderRadius: 100,
         paddingHorizontal: 11,
         paddingVertical: 7,
-        minWidth: 58,
+        width: 72,
+        height: 34,
         alignItems: "center",
         justifyContent: "center",
-        // Shadow — elevation for Android, shadow* for iOS
-        elevation: selected ? 10 : 6,
-        shadowColor: selected ? "#FF385C" : "#000000",
-        shadowOffset: { width: 0, height: selected ? 4 : 2 },
-        shadowOpacity: selected ? 0.35 : 0.18,
-        shadowRadius: selected ? 8 : 5,
+        elevation: selected ? 6 : 4,
         borderWidth: selected ? 0 : 1,
-        borderColor: "#E8E8E8",
+        borderColor: "#E0E0E0",
       }}>
         <Text style={{
           color: selected ? "#FFFFFF" : "#1A1A1A",
@@ -175,17 +174,12 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
           includeFontPadding: false,
         }}>{label}</Text>
       </View>
-      {/* Anchor dot — clean alternative to triangle tail */}
-      <View style={{
-        width: 7, height: 7,
-        borderRadius: 4,
-        backgroundColor: selected ? "#FF385C" : "#CCCCCC",
-        marginTop: 3,
-        elevation: selected ? 4 : 2,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.15,
-        shadowRadius: 2,
+      {/* Anchor dot */}
+      <View collapsable={false} style={{
+        width: 6, height: 6,
+        borderRadius: 3,
+        backgroundColor: selected ? "#FF385C" : "#AAAAAA",
+        marginTop: 4,
       }} />
     </View>
   );
@@ -243,7 +237,7 @@ const MapViewScreen = ({
     <View style={{ flex: 1 }}>
       <MapView
         style={{ flex: 1 }}
-        provider={PROVIDER_DEFAULT}
+        provider={PROVIDER_GOOGLE}
         initialRegion={{
           latitude: 17.4401,
           longitude: 78.3913,
