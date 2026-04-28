@@ -140,40 +140,52 @@ const ListViewIcon = ({ active }: { active: boolean }) => (
 
 // "€"€"€ Price Pin Marker "€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€"€
 const PricePinMarker = ({ price, selected }: { price: number; selected: boolean; type: string }) => {
-  const label = `₹${price.toLocaleString("en-IN")}`;
-  // Pure View/Text — no SVG. SVG inside react-native-maps Marker is unreliable on
-  // Android Google Maps because the native snapshot can capture a blank frame.
+  // Short format: ₹8.8K — keeps label compact and consistent across all pin sizes
+  const label = price >= 100000
+    ? `₹${(price / 100000).toFixed(1)}L`
+    : price >= 1000
+    ? `₹${(price / 1000).toFixed(price % 1000 === 0 ? 0 : 1)}K`
+    : `₹${price}`;
+
   return (
-    <View style={{
-      alignItems: "center",
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.18,
-      shadowRadius: 4,
-      elevation: 4,
-    }}>
+    <View style={{ alignItems: "center" }}>
+      {/* Pill */}
       <View style={{
         backgroundColor: selected ? "#FF385C" : "#FFFFFF",
-        borderRadius: 20,
-        paddingHorizontal: 10,
-        paddingVertical: 6,
-        borderWidth: 1.5,
-        borderColor: selected ? "#E11D48" : "#FFCCDB",
+        borderRadius: 100,
+        paddingHorizontal: 11,
+        paddingVertical: 7,
+        minWidth: 58,
+        alignItems: "center",
+        justifyContent: "center",
+        // Shadow — elevation for Android, shadow* for iOS
+        elevation: selected ? 10 : 6,
+        shadowColor: selected ? "#FF385C" : "#000000",
+        shadowOffset: { width: 0, height: selected ? 4 : 2 },
+        shadowOpacity: selected ? 0.35 : 0.18,
+        shadowRadius: selected ? 8 : 5,
+        borderWidth: selected ? 0 : 1,
+        borderColor: "#E8E8E8",
       }}>
         <Text style={{
-          color: selected ? "#FFFFFF" : "#FF385C",
-          fontSize: selected ? 12 : 11,
-          fontWeight: "700",
-          fontFamily: "Manrope_700Bold",
+          color: selected ? "#FFFFFF" : "#1A1A1A",
+          fontSize: 12,
+          fontWeight: "800",
+          letterSpacing: -0.3,
+          includeFontPadding: false,
         }}>{label}</Text>
       </View>
-      {/* Tail triangle */}
+      {/* Anchor dot — clean alternative to triangle tail */}
       <View style={{
-        width: 0, height: 0,
-        borderLeftWidth: 5, borderRightWidth: 5, borderTopWidth: 6,
-        borderLeftColor: "transparent", borderRightColor: "transparent",
-        borderTopColor: selected ? "#E11D48" : "#FFCCDB",
-        marginTop: -1,
+        width: 7, height: 7,
+        borderRadius: 4,
+        backgroundColor: selected ? "#FF385C" : "#CCCCCC",
+        marginTop: 3,
+        elevation: selected ? 4 : 2,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.15,
+        shadowRadius: 2,
       }} />
     </View>
   );
