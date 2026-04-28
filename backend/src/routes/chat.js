@@ -387,7 +387,7 @@ async function executeTool(name, args, userId) {
                  FROM user_saved_properties usp
                  JOIN properties p ON p.id = usp.property_id
                  WHERE usp.user_id = $1
-                 ORDER BY usp.created_at DESC`,
+                 ORDER BY usp.saved_at DESC`,
                 [userId]
             );
             return { count: rows.length, savedProperties: rows };
