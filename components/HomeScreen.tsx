@@ -152,16 +152,23 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
       <View collapsable={false} style={{
         backgroundColor: selected ? "#FF385C" : "#FFFFFF",
         borderRadius: 20,
-        paddingHorizontal: 12,
-        paddingVertical: 6,
+        paddingHorizontal: 14,
+        paddingVertical: 7,
+        minWidth: 64,
         borderWidth: 1.5,
         borderColor: selected ? "#E11D48" : "#CCCCCC",
+        alignItems: "center",
+        justifyContent: "center",
       }}>
-        <Text style={{
-          color: selected ? "#FFFFFF" : "#222222",
-          fontSize: 11,
-          fontWeight: "700",
-        }}>{label}</Text>
+        <Text
+          numberOfLines={1}
+          style={{
+            color: selected ? "#FFFFFF" : "#222222",
+            fontSize: 12,
+            fontWeight: "700",
+            includeFontPadding: false,
+          }}
+        >{label}</Text>
       </View>
       <View collapsable={false} style={{
         width: 6, height: 6, borderRadius: 3,
@@ -191,13 +198,20 @@ const MapViewScreen = ({
   const scaleAnim = useRef(new Animated.Value(0.95)).current;
   const selectedProp = properties.find((p) => p.id === selectedId) ?? null;
 
-  // Start tracking so Android snapshots the markers after they render.
-  // Switch off after 3s to save battery — selected markers stay tracked always.
+  // tracksViews: true = Google Maps re-snapshots marker on every render (needed
+  // whenever appearance changes). We start true so initial pins render, then drop
+  // to false for performance. We re-enable briefly on every selection change so
+  // the newly selected / deselected marker re-snapshots its updated colour.
   const [tracksViews, setTracksViews] = useState(true);
   useEffect(() => {
     const t = setTimeout(() => setTracksViews(false), 3000);
     return () => clearTimeout(t);
   }, []);
+  useEffect(() => {
+    setTracksViews(true);
+    const t = setTimeout(() => setTracksViews(false), 1500);
+    return () => clearTimeout(t);
+  }, [selectedId]);
 
   // Guard: on Android, MapView.onPress fires right after Marker.onPress,
   // which would immediately hide the card we just showed.
@@ -248,7 +262,7 @@ const MapViewScreen = ({
       >
         {properties.map((prop) => (
           <Marker
-            key={`${prop.id}-${selectedId === prop.id}`}
+            key={prop.id}
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
             anchor={{ x: 0.5, y: 0.9 }}
