@@ -243,11 +243,11 @@ const MapViewScreen = ({
       >
         {properties.map((prop) => (
           <Marker
-            key={prop.id}
+            key={`${prop.id}-${selectedId === prop.id}`}
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
             anchor={{ x: 0.5, y: 1 }}
-            tracksViewChanges={selectedId === prop.id}
+            tracksViewChanges={false}
           >
             <PricePinMarker
               price={prop.pricePerSqft}
