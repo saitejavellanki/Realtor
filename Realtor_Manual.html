@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Realtor – User Manual</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --red: #FF385C;
+    --dark: #1a1a2e;
+    --gray: #64748b;
+    --light: #f8fafc;
+    --border: #e2e8f0;
+    --green: #10b981;
+    --blue: #3b82f6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #1e293b;
+    background: #fff;
+    font-size: 10.5pt;
+    line-height: 1.7;
+  }
+
+  /* ── Page breaks ── */
+  .page-break { page-break-before: always; break-before: page; }
+  .no-break { page-break-inside: avoid; break-inside: avoid; }
+
+  /* ── Cover page ── */
+  .cover {
+    height: 100vh;
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,56,92,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+  }
+  .cover-logo {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, #FF385C, #E11D48);
+    border-radius: 22px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 32px;
+    box-shadow: 0 20px 60px rgba(255,56,92,0.4);
+    font-size: 36px;
+  }
+  .cover-app-name {
+    font-size: 52pt;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -2px;
+    margin-bottom: 12px;
+  }
+  .cover-tagline {
+    font-size: 15pt;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    margin-bottom: 60px;
+    letter-spacing: 0.5px;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 10px 28px;
+    color: rgba(255,255,255,0.8);
+    font-size: 10pt;
+    font-weight: 500;
+    margin-bottom: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .cover-meta {
+    font-size: 9pt;
+    color: rgba(255,255,255,0.35);
+    margin-top: 40px;
+  }
+  .cover-divider {
+    width: 60px; height: 3px;
+    background: linear-gradient(90deg, #FF385C, #3b82f6);
+    border-radius: 2px;
+    margin: 28px auto;
+  }
+
+  /* ── TOC ── */
+  .toc-page {
+    padding: 60px;
+    min-height: 100vh;
+  }
+  .toc-title {
+    font-size: 24pt;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .toc-sub { font-size: 10pt; color: var(--gray); margin-bottom: 40px; }
+  .toc-section { margin-bottom: 6px; }
+  .toc-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dotted #e2e8f0;
+    text-decoration: none;
+    color: inherit;
+  }
+  .toc-num {
+    width: 32px; height: 32px;
+    background: var(--light);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 700; color: var(--red);
+    margin-right: 14px; flex-shrink: 0;
+  }
+  .toc-label { font-size: 11pt; font-weight: 500; flex: 1; }
+  .toc-page-num { font-size: 9pt; color: var(--gray); font-weight: 600; }
+  .toc-group-label {
+    font-size: 8pt; font-weight: 700; color: var(--gray);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-top: 24px; margin-bottom: 8px;
+    padding-left: 46px;
+  }
+
+  /* ── Section pages ── */
+  .section {
+    padding: 56px 60px;
+  }
+  .section-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-icon {
+    width: 48px; height: 48px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .section-num {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .section-title {
+    font-size: 22pt;
+    font-weight: 800;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+
+  /* ── Typography ── */
+  h3 {
+    font-size: 13pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin-top: 28px;
+    margin-bottom: 10px;
+  }
+  h4 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #374151;
+    margin-top: 18px;
+    margin-bottom: 8px;
+  }
+  p { margin-bottom: 12px; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 10.5pt;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+  .card-text { font-size: 9.5pt; color: #475569; }
+
+  /* ── Feature grid ── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .feature-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+  }
+  .feature-icon { font-size: 20px; margin-bottom: 8px; }
+  .feature-title { font-size: 10pt; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .feature-desc { font-size: 9pt; color: var(--gray); line-height: 1.5; }
+
+  /* ── Steps ── */
+  .steps { margin: 16px 0; }
+  .step {
+    display: flex; gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+  }
+  .step-num {
+    width: 28px; height: 28px;
+    background: var(--red);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9pt; font-weight: 800;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .step-content { flex: 1; }
+  .step-title { font-size: 10pt; font-weight: 700; color: var(--dark); margin-bottom: 3px; }
+  .step-desc { font-size: 9pt; color: #475569; line-height: 1.5; }
+
+  /* ── Info boxes ── */
+  .info-box {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    display: flex; gap: 12px; align-items: flex-start;
+    font-size: 9.5pt;
+  }
+  .info-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .info-blue { background: #eff6ff; border-left: 4px solid var(--blue); color: #1e40af; }
+  .info-green { background: #f0fdf4; border-left: 4px solid var(--green); color: #065f46; }
+  .info-yellow { background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; }
+  .info-red { background: #fff1f2; border-left: 4px solid var(--red); color: #9f1239; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 9.5pt;
+  }
+  th {
+    background: var(--dark);
+    color: #fff;
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 9pt;
+  }
+  th:first-child { border-radius: 8px 0 0 0; }
+  th:last-child { border-radius: 0 8px 0 0; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--light); }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    font-weight: 700;
+    margin-right: 4px;
+  }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-red { background: #fff1f2; color: #9f1239; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-yellow { background: #fef3c7; color: #92400e; }
+  .badge-gray { background: #f1f5f9; color: #475569; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 28px 0;
+  }
+
+  /* ── Footer ── */
+  @media print {
+    @page {
+      size: A4;
+      margin: 0;
+    }
+    .cover { height: 100vh; page-break-after: always; }
+    .section { padding: 48px 56px; }
+    a { text-decoration: none; color: inherit; }
+  }
+
+  .screen-label {
+    display: inline-block;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 8pt;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  .url-pill {
+    display: inline-block;
+    background: #0f172a;
+    color: #60a5fa;
+    font-family: 'Courier New', monospace;
+    font-size: 9pt;
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin: 4px 0;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 16px 0;
+  }
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .stat-box {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+  .stat-val { font-size: 20pt; font-weight: 800; color: var(--dark); }
+  .stat-label { font-size: 8.5pt; color: var(--gray); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ COVER ══════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">🏠</div>
+  <div class="cover-app-name">Realtor</div>
+  <div class="cover-tagline">India's Transparent Real Estate Platform</div>
+  <div class="cover-divider"></div>
+  <div class="cover-badge">📋 &nbsp; Complete User Manual</div>
+  <div class="cover-badge">📱 &nbsp; Mobile App + Admin Portal</div>
+  <div class="cover-meta">Version 1.0.2 &nbsp;·&nbsp; Hyderabad, India &nbsp;·&nbsp; 2026</div>
+</div>
+
+<!-- ══════════════════════ TABLE OF CONTENTS ══════════════════════ -->
+<div class="toc-page page-break">
+  <div class="toc-title">Table of Contents</div>
+  <div class="toc-sub">Complete guide to the Realtor platform — mobile app and admin portal</div>
+
+  <div class="toc-group-label">Introduction</div>
+  <div class="toc-item"><div class="toc-num">1</div><div class="toc-label">About Realtor</div><div class="toc-page-num">3</div></div>
+  <div class="toc-item"><div class="toc-num">2</div><div class="toc-label">Key Features Overview</div><div class="toc-page-num">4</div></div>
+  <div class="toc-item"><div class="toc-num">3</div><div class="toc-label">Getting Started — Registration & Login</div><div class="toc-page-num">5</div></div>
+
+  <div class="toc-group-label">Mobile App — User Guide</div>
+  <div class="toc-item"><div class="toc-num">4</div><div class="toc-label">Home Screen & Property Listings</div><div class="toc-page-num">6</div></div>
+  <div class="toc-item"><div class="toc-num">5</div><div class="toc-label">Search & Filters</div><div class="toc-page-num">7</div></div>
+  <div class="toc-item"><div class="toc-num">6</div><div class="toc-label">Property Details</div><div class="toc-page-num">8</div></div>
+  <div class="toc-item"><div class="toc-num">7</div><div class="toc-label">Interactive Map View</div><div class="toc-page-num">9</div></div>
+  <div class="toc-item"><div class="toc-num">8</div><div class="toc-label">Saved Properties</div><div class="toc-page-num">10</div></div>
+  <div class="toc-item"><div class="toc-num">9</div><div class="toc-label">Schedule a Visit</div><div class="toc-page-num">10</div></div>
+  <div class="toc-item"><div class="toc-num">10</div><div class="toc-label">AI Chat Assistant</div><div class="toc-page-num">11</div></div>
+  <div class="toc-item"><div class="toc-num">11</div><div class="toc-label">Investor Dashboard</div><div class="toc-page-num">12</div></div>
+  <div class="toc-item"><div class="toc-num">12</div><div class="toc-label">My Profile</div><div class="toc-page-num">13</div></div>
+
+  <div class="toc-group-label">Admin Portal — Administrator Guide</div>
+  <div class="toc-item"><div class="toc-num">13</div><div class="toc-label">Admin Login & Dashboard</div><div class="toc-page-num">14</div></div>
+  <div class="toc-item"><div class="toc-num">14</div><div class="toc-label">Managing Properties</div><div class="toc-page-num">15</div></div>
+  <div class="toc-item"><div class="toc-num">15</div><div class="toc-label">CSV Bulk Upload</div><div class="toc-page-num">16</div></div>
+  <div class="toc-item"><div class="toc-num">16</div><div class="toc-label">Admin Map View</div><div class="toc-page-num">17</div></div>
+  <div class="toc-item"><div class="toc-num">17</div><div class="toc-label">Developer Registry</div><div class="toc-page-num">17</div></div>
+  <div class="toc-item"><div class="toc-num">18</div><div class="toc-label">Visit Requests Management</div><div class="toc-page-num">18</div></div>
+  <div class="toc-item"><div class="toc-num">19</div><div class="toc-label">Transparency & Verification</div><div class="toc-page-num">18</div></div>
+
+  <div class="toc-group-label">Reference</div>
+  <div class="toc-item"><div class="toc-num">20</div><div class="toc-label">Troubleshooting</div><div class="toc-page-num">19</div></div>
+  <div class="toc-item"><div class="toc-num">21</div><div class="toc-label">Technical Information</div><div class="toc-page-num">20</div></div>
+</div>
+
+<!-- ══════════════════════ 1. ABOUT REALTOR ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff1f2;">🏠</div>
+    <div>
+      <div class="section-num">Section 1</div>
+      <div class="section-title">About Realtor</div>
+    </div>
+  </div>
+
+  <p>Realtor is India's transparent real estate discovery platform built specifically for the Hyderabad market. The platform addresses a critical gap in the Indian property market: the lack of price transparency, verified data, and accessible analytics for everyday buyers and NRI investors.</p>
+
+  <p>Unlike traditional real estate portals, Realtor publishes both the <strong>government circle rate</strong> and the <strong>prevailing market rate</strong> side by side, along with RERA registration status, developer credibility scores, site verification reports, and AI-powered property analysis — all in one place.</p>
+
+  <div class="two-col" style="margin-top:24px;">
+    <div class="card no-break">
+      <div class="card-title">🎯 Our Mission</div>
+      <div class="card-text">To eliminate information asymmetry in Indian real estate by providing buyers with the same level of data that institutional investors have access to — verified, accurate, and up-to-date.</div>
+    </div>
+    <div class="card no-break">
+      <div class="card-title">📍 Current Coverage</div>
+      <div class="card-text">Hyderabad, Telangana — covering 17+ micro-markets including Gachibowli, HITEC City, Banjara Hills, Jubilee Hills, Kondapur, Kokapet, Financial District and more.</div>
+    </div>
+  </div>
+
+  <div class="three-col" style="margin-top:20px;">
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--red);">50+</div>
+      <div class="stat-label">Verified Listings</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--blue);">17</div>
+      <div class="stat-label">Hyderabad Areas</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val" style="color:var(--green);">100%</div>
+      <div class="stat-label">Transparent Pricing</div>
+    </div>
+  </div>
+
+  <div class="info-box info-blue" style="margin-top:24px;">
+    <div class="info-icon">ℹ️</div>
+    <div>Realtor is available as an <strong>Android mobile app</strong> (APK download) and as a <strong>web-based admin portal</strong> for property managers and administrators.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 2. KEY FEATURES ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff;">⭐</div>
+    <div>
+      <div class="section-num">Section 2</div>
+      <div class="section-title">Key Features Overview</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card no-break">
+      <div class="feature-icon">🔍</div>
+      <div class="feature-title">Smart Property Search</div>
+      <div class="feature-desc">Search across 50+ properties by area, property type, price range, and status. Real-time filtering with location-based priority sorting.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">🗺️</div>
+      <div class="feature-title">Interactive Map View</div>
+      <div class="feature-desc">Explore all properties on a live Google Map with price pin markers. Tap any pin to see a quick property card without leaving the map.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">Price History Charts</div>
+      <div class="feature-desc">View 5-year price appreciation charts for every property. Understand past performance and year-over-year growth before investing.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">🛡️</div>
+      <div class="feature-title">POC Transparency</div>
+      <div class="feature-desc">Every listing shows the government circle rate vs. market rate, RERA registration number, verification status, and transparency score out of 100.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">🤖</div>
+      <div class="feature-title">AI Property Assistant</div>
+      <div class="feature-desc">Ask any question about properties, Hyderabad real estate market, investment strategies, or legal queries. Powered by OpenAI GPT-4.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">📈</div>
+      <div class="feature-title">Investor Dashboard</div>
+      <div class="feature-desc">Dedicated NRI/investor view with top ROI properties, area-wise rate comparison, and transparency overview across all listings.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">📅</div>
+      <div class="feature-title">Visit Scheduling</div>
+      <div class="feature-desc">Book a site visit directly from the app. Choose your preferred date and time and send a message to the agent — all in-app.</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-icon">❤️</div>
+      <div class="feature-title">Saved Properties</div>
+      <div class="feature-desc">Bookmark properties you love. Your saved list syncs across sessions and is tied to your account — never lose track of a property.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 3. GETTING STARTED ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">🚀</div>
+    <div>
+      <div class="section-num">Section 3</div>
+      <div class="section-title">Getting Started</div>
+    </div>
+  </div>
+
+  <h3>3.1 Installing the App</h3>
+  <p>The Realtor app is available as an Android APK. Download and install it directly on your Android device — no Play Store required.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Download the APK</div>
+        <div class="step-desc">Obtain the Realtor APK file from your administrator or the official download link. The file name will be <code>Realtor-v1.0.2.apk</code>.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Enable Unknown Sources</div>
+        <div class="step-desc">On your Android device go to <strong>Settings → Security → Install Unknown Apps</strong> and enable installation from your file manager or browser.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Install & Open</div>
+        <div class="step-desc">Tap the downloaded APK file, accept permissions, and tap <strong>Install</strong>. The Realtor icon will appear on your home screen.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info-yellow">
+    <div class="info-icon">⚠️</div>
+    <div>Requires Android 8.0 (API level 26) or above. A stable internet connection is required for all features including property listing, map, and AI chat.</div>
+  </div>
+
+  <h3>3.2 Creating an Account</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Open the App</div>
+        <div class="step-desc">The app opens to the Sign In / Sign Up screen. Tap <strong>Sign Up</strong> tab to create a new account.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Enter Your Details</div>
+        <div class="step-desc">Fill in your <strong>First Name</strong>, <strong>Last Name</strong>, <strong>Email Address</strong>, and a secure <strong>Password</strong>. All fields are required.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Agree & Create Account</div>
+        <div class="step-desc">Check the <strong>Terms & Privacy Policy</strong> checkbox and tap <strong>Create Account</strong>. You'll be logged in immediately.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>3.3 Logging In</h3>
+  <p>If you already have an account, tap <strong>Log In</strong> tab on the auth screen, enter your registered email and password, and tap <strong>Sign In</strong>. Your session persists — you won't need to log in again unless you explicitly sign out.</p>
+
+  <div class="info-box info-green">
+    <div class="info-icon">✅</div>
+    <div>Your login token is stored securely using <strong>Expo SecureStore</strong> — an encrypted device-level storage. Your credentials are never stored in plain text.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 4. HOME SCREEN ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff1f2;">🏘️</div>
+    <div>
+      <div class="section-num">Section 4</div>
+      <div class="section-title">Home Screen & Property Listings</div>
+    </div>
+  </div>
+
+  <p>The Home Screen is the central hub of the Realtor app. It loads all publicly listed properties from the server and displays them as browsable cards.</p>
+
+  <h3>4.1 Screen Layout</h3>
+  <div class="card">
+    <div class="card-title">Top Area</div>
+    <div class="card-text">Contains the search bar and filter button. Fixed at the top of the screen — always visible even while scrolling through listings.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Property Cards</div>
+    <div class="card-text">Each card shows: property photo carousel, title, area, price per sqft, total price in ₹ Lakhs/Crores, status badge, demand label, size, beds/baths, and a like (❤️) button.</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Bottom Navigation Bar</div>
+    <div class="card-text">Five tabs: <strong>Home</strong> (listings), <strong>Map</strong> (map view), <strong>Explore</strong> (investor dashboard), <strong>Saved</strong> (liked properties), and <strong>Profile</strong>.</div>
+  </div>
+
+  <h3>4.2 Property Cards Explained</h3>
+  <table>
+    <tr><th>Element</th><th>Description</th></tr>
+    <tr><td><span class="badge badge-green">Available</span></td><td>Property is actively listed for sale or rent</td></tr>
+    <tr><td><span class="badge badge-yellow">Reserved</span></td><td>Property is under offer or reservation</td></tr>
+    <tr><td><span class="badge badge-blue">Sold</span></td><td>Property has been sold — shown for reference</td></tr>
+    <tr><td><span class="badge badge-gray">Draft</span></td><td>Property pending approval — not yet publicly confirmed</td></tr>
+    <tr><td>🔴 High Demand</td><td>Strong buyer interest in this property or area</td></tr>
+    <tr><td>🟡 Medium</td><td>Moderate buyer activity</td></tr>
+    <tr><td>⚪ Low</td><td>Limited recent activity</td></tr>
+    <tr><td>✓ Verified badge</td><td>Site visited and documents cross-checked by the Realtor team</td></tr>
+  </table>
+
+  <h3>4.3 Liking a Property</h3>
+  <p>Tap the ❤️ icon on any property card to save it to your favourites. The icon turns red when saved. You must be logged in — the app will prompt you to sign in if not authenticated. Your liked properties sync to the server and are accessible from any device.</p>
+</div>
+
+<!-- ══════════════════════ 5. SEARCH & FILTERS ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff;">🔍</div>
+    <div>
+      <div class="section-num">Section 5</div>
+      <div class="section-title">Search & Filters</div>
+    </div>
+  </div>
+
+  <h3>5.1 Search Bar</h3>
+  <p>The search bar at the top of the Home Screen lets you find properties by typing any keyword. The search is instant — results update as you type. You can search by:</p>
+  <ul style="margin-left:20px;margin-bottom:12px;line-height:2;">
+    <li><strong>Area name</strong> — e.g. "Gachibowli", "HITEC City", "Banjara Hills"</li>
+    <li><strong>Property title</strong> — e.g. "Prestige", "Cloud Nine", "Metro"</li>
+    <li><strong>Property type</strong> — e.g. "Villa", "Apartment", "Office"</li>
+    <li><strong>Plot ID</strong> — e.g. "HYD-001", "HYD-012"</li>
+  </ul>
+  <p>To clear the search, tap the ✕ icon that appears on the right side of the search bar.</p>
+
+  <h3>5.2 Filter Panel</h3>
+  <p>Tap the <strong>Filter</strong> button (sliders icon) next to the search bar to open the full-width filter panel. The filter panel has three sections:</p>
+
+  <div class="card no-break">
+    <div class="card-title">📍 Location Filter (Primary)</div>
+    <div class="card-text">A horizontal scrollable row of area chips — one for each unique area in the current listings. Tap any area chip (e.g. "Gachibowli", "Kokapet") to show only properties in that area. Tap <strong>All</strong> to clear the location filter. The count in brackets shows how many listings exist in each area.</div>
+  </div>
+  <div class="card no-break">
+    <div class="card-title">🏠 Type Filter</div>
+    <div class="card-text">Two checkboxes — <strong>Residential</strong> and <strong>Commercial</strong>. You can select one, both, or neither (= all types shown). Selecting only "Commercial" shows offices, retail spaces and warehouses. Selecting only "Residential" shows apartments, villas, duplexes etc.</div>
+  </div>
+  <div class="card no-break">
+    <div class="card-title">✅ Verified Only Toggle</div>
+    <div class="card-text">A toggle switch that, when turned on, filters to show only properties that have been site-verified by the Realtor team. Verified properties have confirmed RERA numbers, cross-checked documents, and a transparency score of 70+.</div>
+  </div>
+
+  <div class="info-box info-blue">
+    <div class="info-icon">💡</div>
+    <div>The filter badge on the Filter button shows a red dot with a count when filters are active, so you always know how many filters are currently applied.</div>
+  </div>
+
+  <h3>5.3 Clear Filters</h3>
+  <p>Open the filter panel and tap <strong>Clear all</strong> (top right of the filter panel) to reset all filters at once and return to the full listing view.</p>
+</div>
+
+<!-- ══════════════════════ 6. PROPERTY DETAILS ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fdf4ff;">📄</div>
+    <div>
+      <div class="section-num">Section 6</div>
+      <div class="section-title">Property Details</div>
+    </div>
+  </div>
+
+  <p>Tap <strong>View Details</strong> on any property card to open the full property detail screen. This screen provides comprehensive information about a single property.</p>
+
+  <h3>6.1 Image Carousel</h3>
+  <p>The top section shows a swipeable photo gallery with up to 5 property images. Swipe left or right to browse photos. The dot indicators below show how many photos are available and which one is currently displayed.</p>
+
+  <h3>6.2 Property Information Sections</h3>
+
+  <table>
+    <tr><th>Section</th><th>Information Shown</th></tr>
+    <tr>
+      <td><strong>Header</strong></td>
+      <td>Property title, area, status badge, demand label, RERA number (if available), verified badge</td>
+    </tr>
+    <tr>
+      <td><strong>Price Box</strong></td>
+      <td>Current price (₹ Lakhs or Crores), price per sqft, year-over-year gain (₹ and %)</td>
+    </tr>
+    <tr>
+      <td><strong>Features</strong></td>
+      <td>Bedrooms, Bathrooms, Garage spaces, Plot size, Year built, Zoning type</td>
+    </tr>
+    <tr>
+      <td><strong>Description</strong></td>
+      <td>Detailed property description written by the listing agent</td>
+    </tr>
+    <tr>
+      <td><strong>Price History Chart</strong></td>
+      <td>Bar chart showing year-wise prices from 2020 to 2025. Tap any bar to see the exact value. The peak year is highlighted.</td>
+    </tr>
+    <tr>
+      <td><strong>Transparency Card</strong></td>
+      <td>Circle Rate (govt. rate), Market Rate (current market), Premium % above circle rate, Rate source (e.g. Dharani portal), Last updated date</td>
+    </tr>
+    <tr>
+      <td><strong>RERA Details</strong></td>
+      <td>RERA registration number, Developer name, Site status (Developed / Under Construction / Vacant), Flood risk level</td>
+    </tr>
+    <tr>
+      <td><strong>Agent Card</strong></td>
+      <td>Agent name, role, and phone number. Tap phone number to call directly.</td>
+    </tr>
+    <tr>
+      <td><strong>Comparable Properties</strong></td>
+      <td>Similar properties in the same area shown as mini-cards for easy comparison</td>
+    </tr>
+  </table>
+
+  <h3>6.3 Transparency Score</h3>
+  <p>Each property has a <strong>Transparency Score from 0–100</strong> calculated from: RERA registration (30 pts), Dual rate disclosure (25 pts), Site verification (25 pts), Source attribution (20 pts). A score above 70 is considered highly transparent.</p>
+
+  <div class="info-box info-green">
+    <div class="info-icon">🛡️</div>
+    <div>Properties with a <strong>✓ Verified</strong> badge have been physically site-visited by the Realtor team and all listed documents have been cross-checked with the Sub-Registrar office records.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 7. MAP VIEW ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">🗺️</div>
+    <div>
+      <div class="section-num">Section 7</div>
+      <div class="section-title">Interactive Map View</div>
+    </div>
+  </div>
+
+  <p>The Map View tab shows all properties as price pins on a live Google Map of Hyderabad. This gives you an instant spatial understanding of property distribution and pricing across the city.</p>
+
+  <h3>7.1 Reading the Map</h3>
+  <div class="two-col">
+    <div class="card no-break">
+      <div class="card-title">⬜ White Pin</div>
+      <div class="card-text">Inactive property marker. Shows price per sqft (e.g. ₹7,200). White background with red text.</div>
+    </div>
+    <div class="card no-break">
+      <div class="card-title">🔴 Red Pin</div>
+      <div class="card-text">Selected/active property marker. Shows price per sqft in white text on red background. Slightly larger than inactive pins.</div>
+    </div>
+  </div>
+
+  <h3>7.2 Interacting with the Map</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Tap a Price Pin</div>
+        <div class="step-desc">Tap any price pin to select it. A property card slides up from the bottom showing the property photo, title, area, price, status and demand.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">View the Property Card</div>
+        <div class="step-desc">The card at the bottom shows key property info. Tap <strong>View Details</strong> on the card to go to the full property detail screen.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Dismiss the Card</div>
+        <div class="step-desc">Tap anywhere on the map (away from a pin) to dismiss the property card and deselect the current pin.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Navigate the Map</div>
+        <div class="step-desc">Pinch to zoom in/out. Drag to pan. The map defaults to Hyderabad centre. Your current location is shown with a blue dot if location permission is granted.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info-yellow">
+    <div class="info-icon">⚠️</div>
+    <div>Location permission is optional. If denied, the map still works fully — it just won't show your current location dot. All properties will still appear as pins.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 8 & 9. SAVED + VISIT ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fff1f2;">❤️</div>
+    <div>
+      <div class="section-num">Sections 8 & 9</div>
+      <div class="section-title">Saved Properties & Visit Scheduling</div>
+    </div>
+  </div>
+
+  <h3>8. Saved Properties</h3>
+  <p>The <strong>Saved</strong> tab (heart icon in bottom navigation) shows all properties you have liked. This list is tied to your account and persists across sessions and devices.</p>
+
+  <h4>How to Save a Property</h4>
+  <p>Tap the ❤️ icon on any property card on the Home Screen or the ❤️ button on the detail screen. The icon turns red to confirm it's saved. The count on the Saved tab badge updates immediately.</p>
+
+  <h4>How to Remove a Saved Property</h4>
+  <p>Tap the ❤️ icon again (it turns grey/outline) to un-save it. Or open the Saved tab and tap the heart icon on any saved card to remove it.</p>
+
+  <div class="info-box info-blue">
+    <div class="info-icon">ℹ️</div>
+    <div>If you are not logged in and try to save a property, the app will redirect you to the Sign In screen. Your saves are stored server-side — they sync automatically after login.</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>9. Schedule a Site Visit</h3>
+  <p>You can book a site visit for any available property directly from the property detail screen.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Open the Property Detail Screen</div>
+        <div class="step-desc">Tap <strong>View Details</strong> on any property card to open the full detail screen.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Tap "Schedule Visit"</div>
+        <div class="step-desc">Scroll to the agent section and tap the <strong>Schedule Visit</strong> button. A visit booking sheet slides up from the bottom.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Fill in the Visit Details</div>
+        <div class="step-desc">Enter your <strong>preferred visit date</strong> (calendar picker), <strong>preferred time</strong> (e.g. "10:00 AM"), <strong>your name</strong>, and an optional <strong>message</strong> for the agent.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Submit the Request</div>
+        <div class="step-desc">Tap <strong>Confirm Visit</strong>. Your request is sent to the admin portal where it appears as "Pending" until confirmed by the team.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box info-green">
+    <div class="info-icon">✅</div>
+    <div>Once your visit is confirmed by the admin team, the status changes to <strong>Confirmed</strong>. Contact the listed agent directly if you need to reschedule.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 10. AI CHAT ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fdf4ff;">🤖</div>
+    <div>
+      <div class="section-num">Section 10</div>
+      <div class="section-title">AI Chat Assistant</div>
+    </div>
+  </div>
+
+  <p>The Realtor AI Assistant is a conversational AI powered by OpenAI's GPT-4. It is trained on Hyderabad real estate context and can answer a wide range of property-related questions in natural language.</p>
+
+  <h3>10.1 Accessing the AI Chat</h3>
+  <p>The AI Chat is accessible via the floating action button (FAB) — a circular button that appears on the Home Screen. Tap it to open the chat panel. You can also enable or disable the AI button from your Profile settings.</p>
+
+  <h3>10.2 What You Can Ask</h3>
+  <div class="feature-grid">
+    <div class="feature-card no-break">
+      <div class="feature-title">🏘️ Property Questions</div>
+      <div class="feature-desc">"Which 3BHK apartments are available in Kondapur under ₹1.5Cr?" or "Show me verified villas in Gachibowli."</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-title">📊 Market Analysis</div>
+      <div class="feature-desc">"What is the average price per sqft in HITEC City?" or "Which area has the highest ROI in Hyderabad right now?"</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-title">⚖️ Legal & RERA</div>
+      <div class="feature-desc">"What is RERA registration and why does it matter?" or "How do I verify if a developer is legitimate?"</div>
+    </div>
+    <div class="feature-card no-break">
+      <div class="feature-title">💰 Investment Advice</div>
+      <div class="feature-desc">"Is Kokapet a good area to invest in 2026?" or "What is the difference between circle rate and market rate?"</div>
+    </div>
+  </div>
+
+  <h3>10.3 Chat Features</h3>
+  <table>
+    <tr><th>Feature</th><th>Details</th></tr>
+    <tr><td>Chat History</td><td>Conversation is saved per session. You can clear history from the Profile screen.</td></tr>
+    <tr><td>Context Awareness</td><td>The AI remembers your conversation context within the same session — follow-up questions work naturally.</td></tr>
+    <tr><td>Real Property Data</td><td>The AI has access to your app's property database for specific listing queries.</td></tr>
+    <tr><td>Language</td><td>Responds in English by default. Can understand Hindi and Telugu queries.</td></tr>
+  </table>
+
+  <div class="info-box info-yellow">
+    <div class="info-icon">⚠️</div>
+    <div>The AI provides general guidance and market insights. Always consult a licensed real estate professional and conduct independent due diligence before making any investment decision.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 11. INVESTOR DASHBOARD ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff;">📈</div>
+    <div>
+      <div class="section-num">Section 11</div>
+      <div class="section-title">Investor Dashboard</div>
+    </div>
+  </div>
+
+  <p>The <strong>Explore</strong> tab (compass icon in the bottom navigation) opens the Investor Dashboard — a dedicated view designed for NRI investors and serious buyers who need market-level data, not just individual listings.</p>
+
+  <h3>11.1 Transparency Overview</h3>
+  <p>A summary tile row showing across all listed properties:</p>
+  <table>
+    <tr><th>Metric</th><th>Description</th></tr>
+    <tr><td>Verified</td><td>Total number of site-verified properties</td></tr>
+    <tr><td>With RERA</td><td>Properties with a valid RERA registration number</td></tr>
+    <tr><td>Dual Rate</td><td>Properties disclosing both circle rate and market rate</td></tr>
+    <tr><td>Unverified</td><td>Properties awaiting verification</td></tr>
+    <tr><td>Avg Market Premium</td><td>Average % by which market rate exceeds government circle rate</td></tr>
+  </table>
+
+  <h3>11.2 Top Zones by ROI</h3>
+  <p>A ranked list of Hyderabad areas sorted by average year-over-year price appreciation. Each zone shows the average market rate per sqft and the number of listings. Use this to identify which micro-markets are delivering the best returns.</p>
+
+  <h3>11.3 Top ROI Properties</h3>
+  <p>The top 4 individual properties with the highest year-over-year gain percentage. Each card shows property name, area, current price, and ROI %. Tap any card to open the full property detail screen.</p>
+
+  <div class="info-box info-blue">
+    <div class="info-icon">💡</div>
+    <div>ROI % is calculated as: <strong>(Past Year Gain ÷ Current Price) × 100</strong>. This represents the annualised price appreciation for the last 12 months, not a guaranteed future return.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 12. PROFILE ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">👤</div>
+    <div>
+      <div class="section-num">Section 12</div>
+      <div class="section-title">My Profile</div>
+    </div>
+  </div>
+
+  <p>The Profile screen is accessed from the rightmost icon in the bottom navigation bar (person icon). It allows you to manage your personal information, app preferences, and account settings.</p>
+
+  <h3>12.1 Personal Information</h3>
+  <p>Tap on any field to edit it. Available fields:</p>
+  <table>
+    <tr><th>Field</th><th>Notes</th></tr>
+    <tr><td>Name</td><td>Your display name shown in the app</td></tr>
+    <tr><td>Phone</td><td>Contact number (optional, used for visit confirmations)</td></tr>
+    <tr><td>Email</td><td>Your registered email — cannot be changed after registration</td></tr>
+    <tr><td>Gender</td><td>Optional preference field</td></tr>
+  </table>
+  <p style="margin-top:12px;">After editing any field, tap <strong>Save Changes</strong> to sync the update to your account.</p>
+
+  <h3>12.2 App Settings</h3>
+  <div class="card">
+    <div class="card-title">AI Assistant Button Toggle</div>
+    <div class="card-text">You can enable or disable the floating AI chat button on the Home Screen. When disabled, the circular AI button is hidden — use this if you prefer a cleaner interface. The toggle state is saved locally on your device.</div>
+  </div>
+
+  <h3>12.3 About This App</h3>
+  <p>Tap <strong>About This App</strong> row (with the ℹ️ icon and › chevron) to open the full About screen. The About screen includes:</p>
+  <ul style="margin-left:20px;line-height:2;">
+    <li>App version and release information</li>
+    <li>Platform features with descriptions</li>
+    <li>How It Works — 4-step overview</li>
+    <li>App info card (developer, platform, data sources)</li>
+  </ul>
+
+  <h3>12.4 Sign Out</h3>
+  <p>Scroll to the bottom of the Profile screen and tap <strong>Sign Out</strong>. This clears your session token from the device. You will be redirected to the login screen. Your saved properties and account data remain on the server — they'll be restored when you log back in.</p>
+</div>
+
+<!-- ══════════════════════ 13. ADMIN LOGIN ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#0f172a; color:#60a5fa;">⚙️</div>
+    <div>
+      <div class="section-num">Section 13</div>
+      <div class="section-title">Admin Login & Dashboard</div>
+    </div>
+  </div>
+
+  <p>The Admin Portal is a web-based interface for property managers and administrators. It provides full control over all listings, visit requests, developer profiles, and verification data.</p>
+
+  <div class="info-box info-blue">
+    <div class="info-icon">🌐</div>
+    <div>Admin Portal URL: <span class="url-pill">https://realtor-1-xkyf.onrender.com</span><br/>Accessible from any modern browser on desktop or mobile.</div>
+  </div>
+
+  <h3>13.1 Logging In</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Open the Admin URL</div>
+        <div class="step-desc">Navigate to the admin portal URL in any browser. You will see the login screen.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Enter Credentials</div>
+        <div class="step-desc">Enter your admin <strong>Email</strong> and <strong>Password</strong>. Default credentials are <code>admin@realestate.com</code> / <code>admin123</code> — change this immediately after first login.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Access the Dashboard</div>
+        <div class="step-desc">Upon successful login, you are redirected to the Dashboard overview page.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>13.2 Dashboard Overview</h3>
+  <p>The Dashboard homepage provides a real-time summary of all platform activity:</p>
+  <table>
+    <tr><th>KPI Card</th><th>Description</th></tr>
+    <tr><td>Total Properties</td><td>All-time total listings in the database (public + private)</td></tr>
+    <tr><td>Available</td><td>Currently active listings open for sale</td></tr>
+    <tr><td>Sold</td><td>Completed transactions</td></tr>
+    <tr><td>Avg Price / sqft</td><td>Average price per square foot across all listings</td></tr>
+  </table>
+  <p>Below the KPIs: <strong>Transparency Overview</strong> (POC metrics), <strong>Status Breakdown</strong> bar chart, <strong>Recent Listings</strong>, and <strong>Visit Requests</strong> management table.</p>
+
+  <h3>13.3 Sidebar Navigation</h3>
+  <p>The left sidebar (dark blue) contains all admin sections:</p>
+  <table>
+    <tr><th>Menu Item</th><th>Function</th></tr>
+    <tr><td>📊 Dashboard</td><td>Overview, KPIs, recent activity</td></tr>
+    <tr><td>🏠 Properties</td><td>Full property management table</td></tr>
+    <tr><td>🗺️ Map View</td><td>Google Maps view of all properties</td></tr>
+    <tr><td>➕ Add Property</td><td>Step-by-step form to add a new listing</td></tr>
+    <tr><td>👥 Developers</td><td>Developer registry management</td></tr>
+    <tr><td>📅 Visit Requests</td><td>View and manage all scheduled visits</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════════ 14. MANAGING PROPERTIES ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#eff6ff;">🏠</div>
+    <div>
+      <div class="section-num">Section 14</div>
+      <div class="section-title">Managing Properties</div>
+    </div>
+  </div>
+
+  <h3>14.1 Properties Table</h3>
+  <p>Navigate to <strong>Properties</strong> in the sidebar. The table shows all listings (public and private) with columns for: Plot ID, Title, Area, Category, Status, Verified, RERA Number, Price/sqft, Size, Visibility, Approval Status, Last Updated, and Actions.</p>
+
+  <h4>Searching & Filtering</h4>
+  <ul style="margin-left:20px;line-height:2;">
+    <li>Use the search bar to filter by plot ID, title, area, or status</li>
+    <li>Check <strong>Verified only</strong> to show only verified listings</li>
+    <li>Click the refresh button (↺) to reload data from the server</li>
+  </ul>
+
+  <h3>14.2 Adding a New Property</h3>
+  <p>Click <strong>Add Property</strong> in the sidebar or the <strong>+ Add Property</strong> button on the Properties page. The form has 4 steps:</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Basic Information</div>
+        <div class="step-desc">Enter Plot ID (e.g. HYD-101), title, area name (free-text field — type any Hyderabad locality), and select the property category (Residential / Commercial / Villa / Apartment etc.)</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Pricing</div>
+        <div class="step-desc">Enter price per sq.ft and plot size. The system automatically calculates the total price. Add historical price entries for each year (2020–2025) using the + Add Year button.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Details & Location</div>
+        <div class="step-desc">Fill in agent info, description, POC transparency fields (circle rate, market rate, RERA number, developer, flood risk). Use the <strong>map search bar</strong> to find the location — type the area name and click Search. Then fine-tune by clicking the exact spot on the map.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Review & Publish</div>
+        <div class="step-desc">Review all details in the summary view. Toggle <strong>Visible to public</strong> to control whether the listing appears in the mobile app. Click <strong>Publish Property</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>14.3 Editing a Property</h3>
+  <p>Click the ✏️ edit icon on any row in the properties table. A drawer slides in from the right with all editable fields. Make your changes and click <strong>Save Changes</strong>. The drawer also allows you to:</p>
+  <ul style="margin-left:20px;line-height:2;">
+    <li>Toggle the property between <strong>Public</strong> (visible in app) and <strong>Private</strong></li>
+    <li>Add or remove <strong>price history</strong> entries</li>
+    <li>Upload <strong>site photo URLs</strong></li>
+    <li>Add <strong>local updates</strong> (news/events affecting the property)</li>
+    <li>Submit a <strong>verification report</strong> after a physical site visit</li>
+  </ul>
+
+  <h3>14.4 Deleting a Property</h3>
+  <p>Click the 🗑️ delete icon on any row. A confirmation dialog appears — click <strong>OK</strong> to permanently delete the listing. This action cannot be undone.</p>
+
+  <div class="info-box info-red">
+    <div class="info-icon">⚠️</div>
+    <div><strong>Deletion is permanent.</strong> All associated price history, site photos, and verification reports for that property will also be deleted. Consider setting the status to <strong>Draft</strong> instead of deleting if you may need the data later.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 15. CSV UPLOAD ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">📂</div>
+    <div>
+      <div class="section-num">Section 15</div>
+      <div class="section-title">CSV Bulk Upload</div>
+    </div>
+  </div>
+
+  <p>The CSV Bulk Upload feature allows you to add up to hundreds of properties at once by uploading a structured spreadsheet file. This is the fastest way to populate the platform.</p>
+
+  <h3>15.1 How to Upload</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <div class="step-title">Go to Properties Page</div>
+        <div class="step-desc">Click <strong>Properties</strong> in the sidebar.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <div class="step-title">Click Upload CSV</div>
+        <div class="step-desc">Click the <strong>↑ Upload CSV</strong> button in the toolbar. A file picker opens.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <div class="step-title">Select Your File</div>
+        <div class="step-desc">Choose your <code>.csv</code> file. Maximum size is 10MB. The upload begins immediately.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-content">
+        <div class="step-title">Review the Result</div>
+        <div class="step-desc">A result banner appears showing: <strong>Created</strong> (new), <strong>Skipped</strong> (duplicate plot_id), and <strong>Errors</strong> (invalid data). The table refreshes automatically.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>15.2 CSV Format Requirements</h3>
+  <p>The CSV must have a header row with these columns (at minimum):</p>
+  <table>
+    <tr><th>Column</th><th>Required</th><th>Example</th></tr>
+    <tr><td>plot_id</td><td>Yes</td><td>HYD-001</td></tr>
+    <tr><td>title</td><td>No</td><td>Prestige Lakeview Villa</td></tr>
+    <tr><td>area</td><td>Yes</td><td>Gachibowli</td></tr>
+    <tr><td>category_type</td><td>Yes</td><td>residential / commercial</td></tr>
+    <tr><td>status</td><td>No</td><td>Available / Sold / Reserved / Draft</td></tr>
+    <tr><td>price_per_sqft</td><td>Yes</td><td>8800</td></tr>
+    <tr><td>size</td><td>Yes</td><td>2800</td></tr>
+    <tr><td>lat</td><td>Yes</td><td>17.4401</td></tr>
+    <tr><td>lng</td><td>Yes</td><td>78.3489</td></tr>
+    <tr><td>is_public</td><td>No</td><td>true / false</td></tr>
+    <tr><td>is_verified</td><td>No</td><td>true / false</td></tr>
+    <tr><td>demand</td><td>No</td><td>High / Medium / Low</td></tr>
+    <tr><td>price_2020 … price_2025</td><td>No</td><td>14500000</td></tr>
+  </table>
+
+  <div class="info-box info-yellow">
+    <div class="info-icon">💡</div>
+    <div>Properties with a <code>plot_id</code> that already exists in the database are automatically <strong>skipped</strong> (not duplicated). Use unique IDs for each property.</div>
+  </div>
+</div>
+
+<!-- ══════════════════════ 16, 17, 18, 19 ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f0fdf4;">🗺️</div>
+    <div>
+      <div class="section-num">Sections 16–19</div>
+      <div class="section-title">Admin Map, Developers, Visits & Verification</div>
+    </div>
+  </div>
+
+  <h3>16. Admin Map View</h3>
+  <p>Navigate to <strong>Map View</strong> in the sidebar to see all properties plotted on an interactive Google Map. The admin map has additional tools beyond the mobile app's map:</p>
+  <table>
+    <tr><th>Feature</th><th>Description</th></tr>
+    <tr><td>Search Bar</td><td>Type any area name (e.g. "Banjara Hills") and press Enter to search and jump to that location</td></tr>
+    <tr><td>Status Filter</td><td>Filter pins by Available / Sold / Reserved / Draft</td></tr>
+    <tr><td>Category Filter</td><td>Show only Residential or Commercial properties</td></tr>
+    <tr><td>Fit All Button</td><td>Auto-zooms the map to show all currently filtered properties</td></tr>
+    <tr><td>Stats Bar</td><td>Shows live counts of showing / available / sold / reserved properties</td></tr>
+    <tr><td>Info Popup</td><td>Click any pin to see title, price, area, RERA number, and verified status</td></tr>
+    <tr><td>Pin Colours</td><td>Green = Available, Purple = Sold, Amber = Reserved, Gray = Draft</td></tr>
+  </table>
+
+  <div class="divider"></div>
+
+  <h3>17. Developer Registry</h3>
+  <p>Navigate to <strong>Developers</strong> in the sidebar. This page manages the list of registered property developers. Each developer record includes name, contact details, registered projects, and credibility score. Developers listed here appear as selectable options when adding properties.</p>
+
+  <div class="divider"></div>
+
+  <h3>18. Visit Requests Management</h3>
+  <p>Navigate to <strong>Visit Requests</strong> in the sidebar (also visible on the Dashboard). This table shows all site visit bookings submitted by mobile app users.</p>
+
+  <table>
+    <tr><th>Column</th><th>Description</th></tr>
+    <tr><td>Property</td><td>The property the visit is for</td></tr>
+    <tr><td>Visitor Name</td><td>Name provided by the user</td></tr>
+    <tr><td>Date & Time</td><td>Requested visit slot</td></tr>
+    <tr><td>Message</td><td>Optional message from the visitor</td></tr>
+    <tr><td>Status</td><td>Pending / Confirmed / Cancelled</td></tr>
+    <tr><td>Actions</td><td>Confirm or Cancel buttons</td></tr>
+  </table>
+
+  <p>Click <strong>Confirm</strong> to approve a visit. Click <strong>Cancel</strong> to reject it. Status updates are reflected immediately in the database.</p>
+
+  <div class="divider"></div>
+
+  <h3>19. Transparency & Verification</h3>
+  <p>To add a verification report to a property, open the Edit Drawer for that property and scroll to the <strong>Verification Reports</strong> section at the bottom. Fill in:</p>
+  <ul style="margin-left:20px;line-height:2;">
+    <li><strong>Verified by</strong> — name of the person who visited the site</li>
+    <li><strong>Site Status</strong> — current physical state of the site</li>
+    <li><strong>Notes</strong> — observations from the site visit</li>
+  </ul>
+  <p>Click <strong>Submit Report</strong>. The property's <code>is_verified</code> status updates to <strong>true</strong> and the ✓ Verified badge appears on the mobile app.</p>
+</div>
+
+<!-- ══════════════════════ 20. TROUBLESHOOTING ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#fffbeb;">🔧</div>
+    <div>
+      <div class="section-num">Section 20</div>
+      <div class="section-title">Troubleshooting</div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Problem</th>
+      <th>Likely Cause</th>
+      <th>Solution</th>
+    </tr>
+    <tr>
+      <td>App shows blank/no properties</td>
+      <td>Backend API is in cold start (free tier sleeps after inactivity)</td>
+      <td>Wait 30–60 seconds and pull-to-refresh. The server is waking up from sleep.</td>
+    </tr>
+    <tr>
+      <td>Map is grey / not loading</td>
+      <td>Google Maps API key not set in the native build</td>
+      <td>Rebuild the APK via EAS Build with the API key in app.json.</td>
+    </tr>
+    <tr>
+      <td>Map pins not visible</td>
+      <td>SVG rendering issue on Android Google Maps</td>
+      <td>Rebuild the APK — the latest build fixes this with flat-colour markers.</td>
+    </tr>
+    <tr>
+      <td>Cannot log in (mobile)</td>
+      <td>API backend is unreachable or credentials are wrong</td>
+      <td>Check internet connection. Verify email/password. Try again after 30s.</td>
+    </tr>
+    <tr>
+      <td>Save / like button not working</td>
+      <td>Not logged in</td>
+      <td>Log in to your account first — saved properties require authentication.</td>
+    </tr>
+    <tr>
+      <td>AI Chat not responding</td>
+      <td>OpenAI API key expired or rate-limited</td>
+      <td>Check admin environment variables. Rotate the OpenAI API key if needed.</td>
+    </tr>
+    <tr>
+      <td>CSV upload fails</td>
+      <td>Missing required columns or invalid data formats</td>
+      <td>Check that plot_id, area, category_type, price_per_sqft, size, lat, lng are present. demand must be "High", "Medium" or "Low" exactly.</td>
+    </tr>
+    <tr>
+      <td>Admin portal shows blank page</td>
+      <td>Not logged in or session expired</td>
+      <td>Navigate to the root URL — you'll be redirected to login automatically.</td>
+    </tr>
+    <tr>
+      <td>Admin map shows no markers</td>
+      <td>REACT_APP_GOOGLE_MAPS_KEY not set in Render environment</td>
+      <td>Add the Google Maps key to Render Static Site → Environment → trigger a redeploy.</td>
+    </tr>
+    <tr>
+      <td>Properties not appearing in mobile app after CSV upload</td>
+      <td>is_public is set to false in the CSV</td>
+      <td>Edit the property in admin and toggle Visibility to Public, or set is_public=true in the CSV before uploading.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ══════════════════════ 21. TECHNICAL INFO ══════════════════════ -->
+<div class="section page-break">
+  <div class="section-header">
+    <div class="section-icon" style="background:#f8fafc;">⚙️</div>
+    <div>
+      <div class="section-num">Section 21</div>
+      <div class="section-title">Technical Information</div>
+    </div>
+  </div>
+
+  <h3>21.1 System Architecture</h3>
+  <div class="two-col">
+    <div class="card no-break">
+      <div class="card-title">📱 Mobile App</div>
+      <div class="card-text">Built with <strong>React Native + Expo SDK 54</strong>. Uses Expo Router for file-based navigation. Fonts: Manrope family (400–700). Maps: react-native-maps with Google Maps. Secure storage: expo-secure-store.</div>
+    </div>
+    <div class="card no-break">
+      <div class="card-title">🖥️ Admin Portal</div>
+      <div class="card-text">Built with <strong>Create React App</strong> (React 18). Maps: @react-google-maps/api. Icons: react-icons/fi. Deployed as a static site on Render.</div>
+    </div>
+    <div class="card no-break">
+      <div class="card-title">🔌 Backend API</div>
+      <div class="card-text"><strong>Node.js + Express</strong> REST API on port 3011. Authentication via JWT (7-day expiry). CSV parsing: csv-parse. File uploads: multer. Deployed on Render Web Service.</div>
+    </div>
+    <div class="card no-break">
+      <div class="card-title">🗄️ Database</div>
+      <div class="card-text"><strong>PostgreSQL 17</strong> hosted on Neon (serverless). 9 tables: properties, mobile_users, admin_users, price_history, user_saved_properties, visit_requests, chat_history, developers, verification_reports.</div>
+    </div>
+  </div>
+
+  <h3>21.2 Hosted URLs</h3>
+  <table>
+    <tr><th>Service</th><th>URL</th></tr>
+    <tr><td>Backend API</td><td><span class="url-pill">https://realtor-ldp0.onrender.com/api</span></td></tr>
+    <tr><td>Admin Portal</td><td><span class="url-pill">https://realtor-1-xkyf.onrender.com</span></td></tr>
+    <tr><td>API Health Check</td><td><span class="url-pill">https://realtor-ldp0.onrender.com/api/health</span></td></tr>
+    <tr><td>GitHub Repository</td><td><span class="url-pill">github.com/saitejavellanki/Realtor</span></td></tr>
+  </table>
+
+  <h3>21.3 API Endpoints Reference</h3>
+  <table>
+    <tr><th>Method</th><th>Endpoint</th><th>Description</th></tr>
+    <tr><td>GET</td><td>/api/properties</td><td>Public listings (is_public=true)</td></tr>
+    <tr><td>GET</td><td>/api/properties/:id</td><td>Single property detail</td></tr>
+    <tr><td>GET</td><td>/api/properties/admin/all</td><td>All listings (admin auth required)</td></tr>
+    <tr><td>POST</td><td>/api/properties</td><td>Create a new property (admin)</td></tr>
+    <tr><td>PUT</td><td>/api/properties/:id</td><td>Update a property (admin)</td></tr>
+    <tr><td>DELETE</td><td>/api/properties/:id</td><td>Delete a property (admin)</td></tr>
+    <tr><td>POST</td><td>/api/properties/csv-upload</td><td>Bulk CSV upload (admin)</td></tr>
+    <tr><td>POST</td><td>/api/auth/mobile/register</td><td>User registration</td></tr>
+    <tr><td>POST</td><td>/api/auth/mobile/login</td><td>User login</td></tr>
+    <tr><td>GET</td><td>/api/saved</td><td>Get user's saved property IDs</td></tr>
+    <tr><td>POST</td><td>/api/visits</td><td>Schedule a site visit</td></tr>
+    <tr><td>POST</td><td>/api/chat</td><td>AI chat message</td></tr>
+  </table>
+
+  <h3>21.4 App Version History</h3>
+  <table>
+    <tr><th>Version</th><th>Release</th><th>Changes</th></tr>
+    <tr><td>1.0.0</td><td>Initial Release</td><td>Core property listings, map, auth, AI chat, admin portal</td></tr>
+    <tr><td>1.0.1</td><td>Patch</td><td>Auth gate fix, Android search bar shadow fix, CORS update</td></tr>
+    <tr><td>1.0.2</td><td>Current</td><td>Google Maps integration, map pin rendering fix, responsive admin portal, watermark UI, Realtor branding, 50-property Hyderabad dataset</td></tr>
+  </table>
+
+  <div class="info-box info-blue" style="margin-top:32px;">
+    <div class="info-icon">📬</div>
+    <div><strong>Support & Feedback:</strong> For technical issues or feature requests, contact the developer at <strong>tejvellank@gmail.com</strong> or file an issue on the GitHub repository at <span class="url-pill">github.com/saitejavellanki/Realtor</span></div>
+  </div>
+
+  <div style="text-align:center; margin-top:60px; padding-top:24px; border-top:1px solid var(--border);">
+    <div style="font-size:10pt; color:var(--gray);">Realtor – India's Transparent Real Estate Platform</div>
+    <div style="font-size:9pt; color:#94a3b8; margin-top:4px;">Version 1.0.2 · Hyderabad, India · 2026 · Confidential</div>
+  </div>
+</div>
+
+</body>
+</html>

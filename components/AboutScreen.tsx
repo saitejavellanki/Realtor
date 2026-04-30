@@ -108,11 +108,7 @@ const features = [
     title: "Price History",
     description: "Track circle rates and market values over time. Understand pricing trends before you invest.",
   },
-  {
-    icon: <IconCpu />,
-    title: "AI Assistant",
-    description: "Ask questions about properties, neighborhoods, and market trends. Get data-driven insights instantly.",
-  },
+
   {
     icon: <IconBarChart />,
     title: "Risk Assessment",
@@ -135,7 +131,7 @@ const steps = [
   { number: "2", text: "Use filters to narrow by type and verification" },
   { number: "3", text: "Tap a property for detailed transparency data" },
   { number: "4", text: "Save properties and schedule visits" },
-  { number: "5", text: "Chat with AI for market insights" },
+  { number: "5", text: "Use the dashboard for investment insights" },
 ];
 
 // ─── About Screen Component ─────────────────────────────────────────────────
@@ -239,7 +235,7 @@ export default function AboutScreen({ onBack }: { onBack: () => void }) {
                 { label: "Developer", value: "Realtor" },
                 { label: "Platform", value: "iOS, Android, Web" },
                 { label: "Data Sources", value: "RERA, Government Records" },
-                { label: "AI Engine", value: "Claude by Anthropic" },
+
               ].map((item, idx, arr) => (
                 <View key={idx}>
                   <View style={[styles.infoRow, { paddingVertical: fw(12) }]}>

@@ -822,6 +822,407 @@ const DetailImageCarousel = ({ images, width }: { images: any[]; width: number }
   );
 };
 
+// ─── Mortgage Calculator ─────────────────────────────────────────────────────
+
+// Custom Slider — uses pageX + measured track position for reliable dragging
+const CustomSlider = ({
+  value, min, max, step, onValueChange, trackColor = "#FF385C", fw,
+}: {
+  value: number; min: number; max: number; step: number;
+  onValueChange: (v: number) => void; trackColor?: string; fw: (px: number) => number;
+}) => {
+  const trackRef = useRef<View>(null);
+  const layoutRef = useRef({ x: 0, width: 1 });
+  const propsRef = useRef({ min, max, step, onValueChange });
+  propsRef.current = { min, max, step, onValueChange };
+
+  const computeValue = (pageX: number) => {
+    const { min: mn, max: mx, step: st, onValueChange: cb } = propsRef.current;
+    const { x: trackX, width: trackW } = layoutRef.current;
+    const ratio = Math.max(0, Math.min(1, (pageX - trackX) / trackW));
+    const raw = mn + ratio * (mx - mn);
+    const stepped = Math.round(raw / st) * st;
+    cb(Math.max(mn, Math.min(mx, stepped)));
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
+      onPanResponderGrant: (evt) => computeValue(evt.nativeEvent.pageX),
+      onPanResponderMove: (evt) => computeValue(evt.nativeEvent.pageX),
+    })
+  ).current;
+
+  const handleLayout = () => {
+    trackRef.current?.measureInWindow((x, _y, width) => {
+      if (width > 0) layoutRef.current = { x, width };
+    });
+  };
+
+  const fillPercent = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
+
+  return (
+    <View
+      ref={trackRef}
+      {...panResponder.panHandlers}
+      onLayout={handleLayout}
+      style={{ height: 44, justifyContent: "center", marginVertical: fw(2) }}
+    >
+      <View style={{ height: 6, borderRadius: 3, backgroundColor: "#F0F0F0" }}>
+        <View style={{ height: 6, borderRadius: 3, backgroundColor: trackColor, width: `${fillPercent}%` }} />
+      </View>
+      <View
+        style={{
+          position: "absolute",
+          left: `${fillPercent}%`,
+          marginLeft: -13,
+          width: 26, height: 26, borderRadius: 13,
+          backgroundColor: "#FFFFFF",
+          borderWidth: 3, borderColor: trackColor,
+          shadowColor: "#000", shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.18, shadowRadius: 4, elevation: 4,
+        }}
+      />
+    </View>
+  );
+};
+
+// Donut chart for mortgage breakdown — uses RN Views for center text to avoid SVG text issues
+const MortgageDonut = ({
+  principal, interest, tax, insurance, size, fw,
+}: {
+  principal: number; interest: number; tax: number; insurance: number;
+  size: number; fw: (px: number) => number;
+}) => {
+  const total = principal + interest + tax + insurance;
+  if (total === 0) return null;
+
+  const strokeW = fw(16);
+  const r = (size - strokeW) / 2;
+  const cx = size / 2;
+  const cy = size / 2;
+  const circumference = 2 * Math.PI * r;
+
+  const segments = [
+    { value: principal, color: "#FF385C", label: "Principal" },
+    { value: interest, color: "#4568FF", label: "Interest" },
+    { value: tax, color: "#10B981", label: "Tax" },
+    { value: insurance, color: "#F5A623", label: "Insurance" },
+  ];
+
+  let offset = 0;
+  const arcs = segments.map((seg) => {
+    const pct = seg.value / total;
+    const dash = pct * circumference;
+    const gap = circumference - dash;
+    const o = offset;
+    offset += dash;
+    return { ...seg, dashArray: `${dash} ${gap}`, dashOffset: -o, pct };
+  });
+
+  return (
+    <View style={{ alignItems: "center" }}>
+      <View style={{ width: size, height: size, position: "relative" }}>
+        <Svg width={size} height={size}>
+          {/* Background ring */}
+          <Circle cx={cx} cy={cy} r={r} fill="none" stroke="#F0F0F0" strokeWidth={strokeW} />
+          {arcs.map((a, i) => (
+            <Circle
+              key={i}
+              cx={cx} cy={cy} r={r}
+              fill="none"
+              stroke={a.color}
+              strokeWidth={strokeW}
+              strokeDasharray={a.dashArray}
+              strokeDashoffset={a.dashOffset}
+              strokeLinecap="butt"
+              rotation={-90}
+              origin={`${cx}, ${cy}`}
+            />
+          ))}
+        </Svg>
+        {/* Center text overlay using RN Views for reliable centering */}
+        <View style={{
+          position: "absolute", top: 0, left: 0, right: 0, bottom: 0,
+          alignItems: "center", justifyContent: "center",
+        }}>
+          <Text style={{ fontSize: fw(10), fontFamily: "Manrope_500Medium", color: "#717171" }}>
+            Total EMI
+          </Text>
+          <Text style={{ fontSize: fw(15), fontFamily: "Manrope_700Bold", color: "#222222", marginTop: 2 }}>
+            ₹{Math.round(total).toLocaleString("en-IN")}
+          </Text>
+        </View>
+      </View>
+
+      {/* Legend */}
+      <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: fw(8), marginTop: fw(10) }}>
+        {arcs.map((a, i) => (
+          <View key={i} style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: a.color }} />
+            <Text style={{ fontSize: fw(10), fontFamily: "Manrope_500Medium", color: "#717171" }}>
+              {a.label} ({Math.round(a.pct * 100)}%)
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+// Main Mortgage Calculator inline component
+const MortgageCalculator = ({ fw }: { fw: (px: number) => number }) => {
+  const [propertyPrice, setPropertyPrice] = useState(5000000);  // ₹50L default
+  const [downPaymentPct, setDownPaymentPct] = useState(20);
+  const [interestRate, setInterestRate] = useState(8.5);
+  const [loanTerm, setLoanTerm] = useState(20);
+  const [expanded, setExpanded] = useState(true);
+
+  const toggleExpand = () => setExpanded(prev => !prev);
+
+  // Calculations
+  const downPayment = propertyPrice * (downPaymentPct / 100);
+  const loanAmount = propertyPrice - downPayment;
+  const monthlyRate = interestRate / 100 / 12;
+  const numPayments = loanTerm * 12;
+
+  // EMI formula: P * r * (1+r)^n / ((1+r)^n - 1)
+  const emi =
+    monthlyRate > 0
+      ? (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) /
+        (Math.pow(1 + monthlyRate, numPayments) - 1)
+      : loanAmount / numPayments;
+
+  const totalPayment = emi * numPayments;
+  const totalInterest = totalPayment - loanAmount;
+  const monthlyPrincipal = loanAmount / numPayments;
+  const monthlyInterest = emi - monthlyPrincipal;
+
+  // Estimated monthly property tax (~0.5% of property value / 12)
+  const monthlyTax = (propertyPrice * 0.005) / 12;
+  // Estimated monthly insurance (~0.1% of property value / 12)
+  const monthlyInsurance = (propertyPrice * 0.001) / 12;
+
+  const totalMonthly = emi + monthlyTax + monthlyInsurance;
+
+  // No animated height — simple show/hide for robustness
+
+  return (
+    <View style={{
+      backgroundColor: "#FFFFFF", borderRadius: 16, borderWidth: 1, borderColor: "#EBEBEB",
+      marginBottom: fw(12), overflow: "hidden",
+      shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 12, elevation: 2,
+    }}>
+      {/* Header - always visible */}
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={toggleExpand}
+        style={{
+          flexDirection: "row", alignItems: "center", justifyContent: "space-between",
+          padding: fw(14),
+        }}
+      >
+        <View style={{ flexDirection: "row", alignItems: "center", gap: fw(10) }}>
+          <View>
+            <Text style={{ fontSize: fw(15), fontFamily: "Manrope_700Bold", color: "#222222" }}>
+              Mortgage Calculator
+            </Text>
+            <Text style={{ fontSize: fw(11), fontFamily: "Manrope_500Medium", color: "#717171", marginTop: 1 }}>
+              EMI ≈ ₹{Math.round(totalMonthly).toLocaleString("en-IN")}/mo
+            </Text>
+          </View>
+        </View>
+        <View style={{ transform: [{ rotate: expanded ? "180deg" : "0deg" }] }}>
+          <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
+            <Path d="M6 9l6 6 6-6" stroke="#717171" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+          </Svg>
+        </View>
+      </TouchableOpacity>
+
+      {/* Expandable content */}
+      {expanded && (
+        <View style={{ paddingHorizontal: fw(14), paddingBottom: fw(16) }}>
+
+          {/* Divider */}
+          <View style={{ height: 1, backgroundColor: "#F2F2F2", marginBottom: fw(14) }} />
+
+          {/* Property Price */}
+          <View style={{ marginBottom: fw(14) }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: fw(4) }}>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_600SemiBold", color: "#222222" }}>
+                Property Price
+              </Text>
+              <View style={{ backgroundColor: "#F7F7F7", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 8 }}>
+                <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222222" }}>
+                  {formatPrice(propertyPrice)}
+                </Text>
+              </View>
+            </View>
+            <CustomSlider
+              value={propertyPrice} min={500000} max={50000000} step={100000}
+              onValueChange={setPropertyPrice} trackColor="#FF385C" fw={fw}
+            />
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>₹5L</Text>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>₹5Cr</Text>
+            </View>
+          </View>
+
+          {/* Down Payment */}
+          <View style={{ marginBottom: fw(14) }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: fw(4) }}>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_600SemiBold", color: "#222222" }}>
+                Down Payment
+              </Text>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <View style={{ backgroundColor: "#FFF0F3", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
+                  <Text style={{ fontSize: fw(11), fontFamily: "Manrope_700Bold", color: "#FF385C" }}>
+                    {downPaymentPct}%
+                  </Text>
+                </View>
+                <View style={{ backgroundColor: "#F7F7F7", paddingHorizontal: 10, paddingVertical: 3, borderRadius: 8 }}>
+                  <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222222" }}>
+                    {formatPrice(downPayment)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <CustomSlider
+              value={downPaymentPct} min={5} max={80} step={1}
+              onValueChange={setDownPaymentPct} trackColor="#4568FF" fw={fw}
+            />
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>5%</Text>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>80%</Text>
+            </View>
+          </View>
+
+          {/* Interest Rate & Loan Term (side by side) */}
+          <View style={{ flexDirection: "row", gap: fw(10), marginBottom: fw(16) }}>
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: fw(4) }}>
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_600SemiBold", color: "#222222" }}>
+                  Interest Rate
+                </Text>
+                <View style={{ backgroundColor: "#F7F7F7", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+                  <Text style={{ fontSize: fw(11), fontFamily: "Manrope_700Bold", color: "#222222" }}>
+                    {interestRate.toFixed(1)}%
+                  </Text>
+                </View>
+              </View>
+              <CustomSlider
+                value={interestRate} min={5} max={15} step={0.1}
+                onValueChange={setInterestRate} trackColor="#10B981" fw={fw}
+              />
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>5%</Text>
+                <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>15%</Text>
+              </View>
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: fw(4) }}>
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_600SemiBold", color: "#222222" }}>
+                  Loan Term
+                </Text>
+                <View style={{ backgroundColor: "#F7F7F7", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6 }}>
+                  <Text style={{ fontSize: fw(11), fontFamily: "Manrope_700Bold", color: "#222222" }}>
+                    {loanTerm} yrs
+                  </Text>
+                </View>
+              </View>
+              <CustomSlider
+                value={loanTerm} min={5} max={30} step={1}
+                onValueChange={setLoanTerm} trackColor="#F5A623" fw={fw}
+              />
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>5 yrs</Text>
+                <Text style={{ fontSize: fw(9), fontFamily: "Manrope_500Medium", color: "#ABABAB" }}>30 yrs</Text>
+              </View>
+            </View>
+          </View>
+
+          {/* Donut Chart */}
+          <MortgageDonut
+            principal={monthlyPrincipal}
+            interest={monthlyInterest}
+            tax={monthlyTax}
+            insurance={monthlyInsurance}
+            size={fw(190)}
+            fw={fw}
+          />
+
+          {/* Detailed breakdown */}
+          <View style={{
+            backgroundColor: "#FAFAFA", borderRadius: fw(12), padding: fw(12),
+            marginTop: fw(14), gap: fw(8),
+          }}>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#FF385C" }} />
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_500Medium", color: "#555" }}>Monthly Principal</Text>
+              </View>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222" }}>₹{Math.round(monthlyPrincipal).toLocaleString("en-IN")}</Text>
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#4568FF" }} />
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_500Medium", color: "#555" }}>Monthly Interest</Text>
+              </View>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222" }}>₹{Math.round(monthlyInterest).toLocaleString("en-IN")}</Text>
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#10B981" }} />
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_500Medium", color: "#555" }}>Est. Property Tax</Text>
+              </View>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222" }}>₹{Math.round(monthlyTax).toLocaleString("en-IN")}</Text>
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: "#F5A623" }} />
+                <Text style={{ fontSize: fw(11), fontFamily: "Manrope_500Medium", color: "#555" }}>Est. Insurance</Text>
+              </View>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222" }}>₹{Math.round(monthlyInsurance).toLocaleString("en-IN")}</Text>
+            </View>
+            <View style={{ height: 1, backgroundColor: "#EBEBEB", marginVertical: fw(4) }} />
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={{ fontSize: fw(12), fontFamily: "Manrope_700Bold", color: "#222" }}>Total Monthly</Text>
+              <Text style={{ fontSize: fw(14), fontFamily: "Manrope_700Bold", color: "#FF385C" }}>₹{Math.round(totalMonthly).toLocaleString("en-IN")}</Text>
+            </View>
+          </View>
+
+          {/* Summary stats row */}
+          <View style={{ flexDirection: "row", gap: fw(8), marginTop: fw(12) }}>
+            <View style={{ flex: 1, backgroundColor: "#F0F7FF", borderRadius: fw(10), padding: fw(10), alignItems: "center" }}>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_700Bold", color: "#4568FF", letterSpacing: 0.4 }}>LOAN AMOUNT</Text>
+              <Text style={{ fontSize: fw(13), fontFamily: "Manrope_700Bold", color: "#222222", marginTop: 2 }}>
+                {formatPrice(loanAmount)}
+              </Text>
+            </View>
+            <View style={{ flex: 1, backgroundColor: "#FFF0F3", borderRadius: fw(10), padding: fw(10), alignItems: "center" }}>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_700Bold", color: "#FF385C", letterSpacing: 0.4 }}>TOTAL INTEREST</Text>
+              <Text style={{ fontSize: fw(13), fontFamily: "Manrope_700Bold", color: "#222222", marginTop: 2 }}>
+                {formatPrice(totalInterest)}
+              </Text>
+            </View>
+            <View style={{ flex: 1, backgroundColor: "#E8F7EF", borderRadius: fw(10), padding: fw(10), alignItems: "center" }}>
+              <Text style={{ fontSize: fw(9), fontFamily: "Manrope_700Bold", color: "#10B981", letterSpacing: 0.4 }}>TOTAL COST</Text>
+              <Text style={{ fontSize: fw(13), fontFamily: "Manrope_700Bold", color: "#222222", marginTop: 2 }}>
+                {formatPrice(totalPayment)}
+              </Text>
+            </View>
+          </View>
+
+          <Text style={{ fontSize: fw(9), color: "#ABABAB", fontFamily: "Manrope_400Regular", textAlign: "center", marginTop: fw(10), lineHeight: fw(14) }}>
+            *Tax and insurance are estimates. Actual values vary by municipality and insurer. EMI calculated using reducing balance method.
+          </Text>
+        </View>
+      )}
+    </View>
+  );
+};
+
 // Property Detail Screen
 // ─── NRI / Investor Dashboard ────────────────────────────────────────────────
 const NriDashboardScreen = ({
@@ -843,14 +1244,34 @@ const NriDashboardScreen = ({
       ) / 10
     : 0;
 
+  // Helper: compute YoY% from price history (last 2 entries) for more varied data
+  const getYoY = (p: Property) => {
+    const hist = Array.isArray(p.priceHistory) ? p.priceHistory : [];
+    if (hist.length >= 2) {
+      const sorted = [...hist].sort((a, b) => {
+        const ya = typeof a === "number" ? 0 : a.year;
+        const yb = typeof b === "number" ? 0 : b.year;
+        return ya - yb;
+      });
+      const prev = typeof sorted[sorted.length - 2] === "number"
+        ? sorted[sorted.length - 2] as number
+        : (sorted[sorted.length - 2] as any)?.price || 0;
+      const curr = typeof sorted[sorted.length - 1] === "number"
+        ? sorted[sorted.length - 1] as number
+        : (sorted[sorted.length - 1] as any)?.price || 0;
+      if (prev > 0) return ((curr - prev) / prev) * 100;
+    }
+    // Fallback to pastYearGain / currentPrice
+    return p.currentPrice > 0 ? (p.pastYearGain * 100) / p.currentPrice : 0;
+  };
+
   // Top zones by avg market rate
   const zoneMap: Record<string, { count: number; sumRate: number; sumYoY: number }> = {};
   properties.forEach(p => {
     if (!zoneMap[p.area]) zoneMap[p.area] = { count: 0, sumRate: 0, sumYoY: 0 };
     zoneMap[p.area].count += 1;
     zoneMap[p.area].sumRate += p.marketRate || p.pricePerSqft || 0;
-    const yoy = p.currentPrice > 0 ? (p.pastYearGain * 100) / p.currentPrice : 0;
-    zoneMap[p.area].sumYoY += yoy;
+    zoneMap[p.area].sumYoY += getYoY(p);
   });
   const topZones = Object.entries(zoneMap)
     .map(([area, v]) => ({
@@ -864,8 +1285,8 @@ const NriDashboardScreen = ({
 
   // Top ROI properties
   const topRoi = properties
-    .filter(p => p.currentPrice > 0 && p.pastYearGain > 0)
-    .map(p => ({ p, roi: (p.pastYearGain * 100) / p.currentPrice }))
+    .filter(p => p.currentPrice > 0 && getYoY(p) > 0)
+    .map(p => ({ p, roi: getYoY(p) }))
     .sort((a, b) => b.roi - a.roi)
     .slice(0, 4);
 
@@ -926,7 +1347,7 @@ const NriDashboardScreen = ({
           shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 12, elevation: 2,
         }}>
           <Text style={{ fontSize: fw(15), fontFamily: "Manrope_700Bold", color: "#222222", marginBottom: fw(10) }}>
-            🔥 Top Investment Zones
+            Top Investment Zones
           </Text>
           {topZones.length === 0 ? (
             <Text style={{ fontSize: fw(12), color: "#717171" }}>No data yet.</Text>
@@ -961,7 +1382,7 @@ const NriDashboardScreen = ({
           shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.06, shadowRadius: 12, elevation: 2,
         }}>
           <Text style={{ fontSize: fw(15), fontFamily: "Manrope_700Bold", color: "#222222", marginBottom: fw(10) }}>
-            💰 Highest 1-Year ROI
+            Highest 1-Year ROI
           </Text>
           {topRoi.length === 0 ? (
             <Text style={{ fontSize: fw(12), color: "#717171" }}>No data yet.</Text>
@@ -988,6 +1409,9 @@ const NriDashboardScreen = ({
             </TouchableOpacity>
           ))}
         </View>
+
+        {/* Mortgage Calculator */}
+        <MortgageCalculator fw={fw} />
 
         <Text style={{ fontSize: fw(10), color: "#717171", fontFamily: "Manrope_400Regular", textAlign: "center", marginTop: fw(8) }}>
           Data sourced from registered transactions & verified field reports.
@@ -2828,8 +3252,29 @@ export default function HomeScreen() {
   };
 
   // ─── Format AI response with markdown-like rendering ─────────────────────
+  const NAV_LABELS: Record<string, string> = {
+    home: "🏠 Go to Home",
+    saved: "❤️ Go to Saved",
+    dashboard: "📊 Open Dashboard",
+    profile: "👤 Go to Profile",
+  };
+
+  const handleNavCTA = (tab: string) => {
+    const validTab = tab as "home" | "saved" | "dashboard" | "profile";
+    if (["home", "saved", "dashboard", "profile"].includes(validTab)) {
+      setSelectedProp(null);
+      setActiveTab(validTab);
+      setChatVisible(false);
+    }
+  };
+
   const renderFormattedAI = (text: string) => {
-    const lines = text.split("\n");
+    // Extract [NAV:xxx] markers
+    const navRegex = /\[NAV:(home|saved|dashboard|profile)\]/gi;
+    const navMatches = [...text.matchAll(navRegex)];
+    const cleanText = text.replace(navRegex, "").trim();
+
+    const lines = cleanText.split("\n");
     const elements: React.ReactNode[] = [];
 
     lines.forEach((line, li) => {
@@ -2889,6 +3334,38 @@ export default function HomeScreen() {
         </View>
       );
     });
+
+    // Render navigation CTA buttons extracted from the AI response
+    if (navMatches.length > 0) {
+      const uniqueTabs = [...new Set(navMatches.map(m => m[1].toLowerCase()))];
+      elements.push(
+        <View key="nav-ctas" style={{ flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
+          {uniqueTabs.map(tab => (
+            <TouchableOpacity
+              key={`nav-${tab}`}
+              activeOpacity={0.7}
+              onPress={() => handleNavCTA(tab)}
+              style={{
+                backgroundColor: "#FF385C",
+                borderRadius: 20,
+                paddingHorizontal: 16,
+                paddingVertical: 10,
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <Text style={{ fontSize: 13, fontFamily: "Manrope_600SemiBold", color: "#FFFFFF" }}>
+                {NAV_LABELS[tab] || `Go to ${tab}`}
+              </Text>
+              <Svg width={14} height={14} viewBox="0 0 24 24" fill="none">
+                <Path d="M5 12h14M12 5l7 7-7 7" stroke="#FFFFFF" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+              </Svg>
+            </TouchableOpacity>
+          ))}
+        </View>
+      );
+    }
 
     return <View>{elements}</View>;
   };
