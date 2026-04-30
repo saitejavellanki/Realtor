@@ -147,21 +147,51 @@ const PricePinMarker = ({ price, selected }: { price: number; selected: boolean;
     ? `₹${(price / 1000).toFixed(price % 1000 === 0 ? 0 : 1)}K`
     : `₹${price}`;
 
+  // Fixed dimensions on a hardware-textured wrapper guarantee the snapshot
+  // bitmap matches the laid-out size exactly. Android's view-to-bitmap
+  // pipeline measures Text loosely; explicit lineHeight + textAlignVertical
+  // pin the glyph inside the box so the snapshot captures the whole pill.
+  const W = 80;
+  const H = 32;
   return (
     <View
       collapsable={false}
+      renderToHardwareTextureAndroid
       style={{
-        backgroundColor: selected ? "#FF385C" : "#FFFFFF",
-        borderRadius: 12,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        borderWidth: 1.5,
-        borderColor: selected ? "#C41230" : "#BBBBBB",
+        width: W,
+        height: H,
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <Text style={{ color: selected ? "#FFFFFF" : "#333333", fontSize: 11, fontWeight: "700" }}>
-        {label}
-      </Text>
+      <View
+        collapsable={false}
+        style={{
+          width: W,
+          height: H,
+          backgroundColor: selected ? "#FF385C" : "#FFFFFF",
+          borderRadius: H / 2,
+          borderWidth: 2,
+          borderColor: selected ? "#C41230" : "#B0B0B0",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          allowFontScaling={false}
+          style={{
+            color: selected ? "#FFFFFF" : "#222222",
+            fontSize: 12,
+            lineHeight: 14,
+            fontWeight: "800",
+            textAlign: "center",
+            textAlignVertical: "center",
+            includeFontPadding: false,
+          }}
+        >
+          {label}
+        </Text>
+      </View>
     </View>
   );
 };
@@ -252,7 +282,7 @@ const MapViewScreen = ({
             key={prop.id}
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
-            anchor={{ x: 0.5, y: 0.9 }}
+            anchor={{ x: 0.5, y: 0.5 }}
             tracksViewChanges={tracksViews || selectedId === prop.id}
           >
             <PricePinMarker
