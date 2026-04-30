@@ -282,15 +282,10 @@ const MapViewScreen = ({
             key={prop.id}
             coordinate={{ latitude: prop.latitude, longitude: prop.longitude }}
             onPress={() => showCard(prop.id)}
-            anchor={{ x: 0.5, y: 0.5 }}
-            tracksViewChanges={tracksViews || selectedId === prop.id}
-          >
-            <PricePinMarker
-              price={prop.pricePerSqft}
-              selected={selectedId === prop.id}
-              type={prop.type}
-            />
-          </Marker>
+            title={prop.title}
+            description={`₹${prop.pricePerSqft.toLocaleString("en-IN")}/sqft · ${prop.area}`}
+            pinColor={selectedId === prop.id ? "#FF385C" : "tomato"}
+          />
         ))}
       </MapView>
 
