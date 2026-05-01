@@ -59,6 +59,10 @@
         "projectId": "96bd02bc-b2e6-4e7b-b102-4d0e3a50d362"
       }
     },
-    "owner": "poc1244"
+    "owner": "poc1244",
+    "runtimeVersion": "1.0.3",
+    "updates": {
+      "url": "https://u.expo.dev/96bd02bc-b2e6-4e7b-b102-4d0e3a50d362"
+    }
   }
 }
