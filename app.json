@@ -56,8 +56,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "8d6a92ef-f64e-43f2-9c1d-b9ca2e4be0cf"
+        "projectId": "96bd02bc-b2e6-4e7b-b102-4d0e3a50d362"
       }
-    }
+    },
+    "owner": "poc1244"
   }
 }
