@@ -30,16 +30,21 @@ const VISIT_STATUS_COLORS = {
   Cancelled: { bg: "#fee2e2", text: "#dc2626" },
 };
 
-function KpiCard({ icon: Icon, color, bgColor, label, value, sub, trend }) {
+function KpiCard({ icon: Icon, color, bgColor, label, value, sub, trend, accentColor }) {
   return (
-    <div style={{ ...s.kpi, background: "#fff" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+    <div style={{ ...s.kpi, borderTop: `3px solid ${accentColor || color}` }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
         <div style={{ ...s.kpiIconWrap, background: bgColor }}>
-          <Icon size={18} style={{ color }} />
+          <Icon size={19} style={{ color }} />
         </div>
         {trend !== undefined && (
-          <span style={{ ...s.trend, color: trend >= 0 ? "#10b981" : "#ef4444" }}>
-            {trend >= 0 ? "▲" : "▼"} {Math.abs(trend)}%
+          <span style={{
+            fontSize: 11, fontWeight: 700, padding: "3px 8px", borderRadius: 20,
+            background: trend >= 0 ? "#f0fdf4" : "#fef2f2",
+            color: trend >= 0 ? "#16a34a" : "#dc2626",
+            display: "flex", alignItems: "center", gap: 2,
+          }}>
+            {trend >= 0 ? "↑" : "↓"} {Math.abs(trend)}%
           </span>
         )}
       </div>
@@ -105,10 +110,10 @@ export default function Dashboard() {
     <div style={s.page}>
       {/* KPI Row */}
       <div style={{ ...s.kpiGrid, gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: isMobile ? 12 : 20 }}>
-        <KpiCard icon={FiHome} color="#3b82f6" bgColor="#eff6ff" label="Total Properties" value={totalProps} sub="All time listings" trend={12} />
-        <KpiCard icon={FiCheckCircle} color="#10b981" bgColor="#d1fae5" label="Available" value={available} sub={`${((available / Math.max(totalProps, 1)) * 100).toFixed(0)}% of total`} trend={4} />
-        <KpiCard icon={FiTrendingUp} color="#8b5cf6" bgColor="#ede9fe" label="Sold" value={sold} sub="Completed deals" trend={-2} />
-        <KpiCard icon={FiDollarSign} color="#f59e0b" bgColor="#fef3c7" label="Avg Price / sqft" value={avgPrice ? `Rs. ${Number(avgPrice).toLocaleString()}` : "--"} sub="Across all listings" />
+        <KpiCard icon={FiHome} color="#3b82f6" bgColor="#eff6ff" accentColor="#3b82f6" label="Total Properties" value={totalProps} sub="All listings in system" trend={12} />
+        <KpiCard icon={FiCheckCircle} color="#10b981" bgColor="#d1fae5" accentColor="#10b981" label="Available" value={available} sub={`${((available / Math.max(totalProps, 1)) * 100).toFixed(0)}% of portfolio`} trend={4} />
+        <KpiCard icon={FiTrendingUp} color="#8b5cf6" bgColor="#ede9fe" accentColor="#8b5cf6" label="Sold" value={sold} sub="Completed deals" trend={-2} />
+        <KpiCard icon={FiDollarSign} color="#f59e0b" bgColor="#fef3c7" accentColor="#f59e0b" label="Avg Price / sqft" value={avgPrice ? `₹${Number(avgPrice).toLocaleString("en-IN")}` : "--"} sub="Across all listings" />
       </div>
 
       {/* Transparency Overview */}
@@ -182,7 +187,7 @@ export default function Dashboard() {
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
                     <span style={{ ...s.badge, background: col.bg, color: col.text }}>{item.status}</span>
-                    <span style={s.price}>Rs. {Number(item.price_per_sqft || 0).toLocaleString()}/sqft</span>
+                    <span style={s.price}>₹{Number(item.price_per_sqft || 0).toLocaleString("en-IN")}/sqft</span>
                   </div>
                 </div>
               );
@@ -295,12 +300,16 @@ export default function Dashboard() {
 
 function TransparencyTile({ icon: Icon, color, bg, label, value }) {
   return (
-    <div style={{ border: "1px solid #e2e8f0", borderRadius: 12, padding: 16, background: "#fff" }}>
-      <div style={{ width: 36, height: 36, borderRadius: 10, background: bg, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
-        <Icon size={16} style={{ color }} />
+    <div style={{
+      border: `1px solid ${bg}`, borderRadius: 14, padding: 18,
+      background: `linear-gradient(135deg, ${bg} 0%, #fff 100%)`,
+      display: "flex", flexDirection: "column", gap: 8,
+    }}>
+      <div style={{ width: 38, height: 38, borderRadius: 11, background: "#fff", boxShadow: `0 2px 8px ${color}30`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Icon size={17} style={{ color }} />
       </div>
-      <div style={{ fontSize: 22, fontWeight: 800, color: "#0f172a" }}>{value}</div>
-      <div style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginTop: 2 }}>{label}</div>
+      <div style={{ fontSize: 26, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.5px", lineHeight: 1 }}>{value}</div>
+      <div style={{ fontSize: 11.5, fontWeight: 600, color: "#64748b", lineHeight: 1.3 }}>{label}</div>
     </div>
   );
 }
@@ -331,50 +340,74 @@ function LoadingState() {
 
 function ErrorState({ message }) {
   return (
-    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 12, padding: 24, color: "#b91c1c", fontSize: 14 }}>
-      Error: {message}
+    <div style={{ background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 16, padding: "24px 28px", color: "#b91c1c", fontSize: 14, fontWeight: 500, display: "flex", alignItems: "center", gap: 12 }}>
+      <span style={{ fontSize: 20 }}>⚠️</span>
+      <div><strong>Failed to load dashboard</strong><br /><span style={{ fontSize: 13, opacity: 0.8 }}>{message}</span></div>
     </div>
   );
 }
 
 const s = {
-  page: { display: "flex", flexDirection: "column", gap: 24 },
-  kpiGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 20 },
-  kpi: { borderRadius: 16, padding: 22, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", display: "flex", flexDirection: "column" },
-  kpiIconWrap: { width: 42, height: 42, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16 },
-  kpiValue: { fontSize: 28, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.5px", marginBottom: 4 },
-  kpiLabel: { fontSize: 13, fontWeight: 600, color: "#475569" },
-  kpiSub: { fontSize: 11, color: "#94a3b8", marginTop: 4 },
-  trend: { fontSize: 11, fontWeight: 700, padding: "2px 7px", borderRadius: 20, background: "#f0fdf4" },
+  page: { display: "flex", flexDirection: "column", gap: 20 },
+  kpiGrid: { display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 },
+  kpi: {
+    borderRadius: 16, padding: "20px 22px", background: "#fff",
+    border: "1px solid #e8ecf0",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04)",
+    display: "flex", flexDirection: "column",
+    transition: "box-shadow 0.2s",
+  },
+  kpiIconWrap: { width: 44, height: 44, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center" },
+  kpiValue: { fontSize: 32, fontWeight: 800, color: "#0f172a", letterSpacing: "-1px", marginBottom: 2 },
+  kpiLabel: { fontSize: 13, fontWeight: 700, color: "#374151" },
+  kpiSub: { fontSize: 11.5, color: "#94a3b8", marginTop: 5, fontWeight: 500 },
 
-  mid: { display: "flex", gap: 20 },
-  card: { background: "#fff", borderRadius: 16, border: "1px solid #e2e8f0", boxShadow: "0 1px 4px rgba(0,0,0,0.04)", overflow: "hidden" },
-  cardHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px 22px", borderBottom: "1px solid #f1f5f9" },
-  cardTitle: { fontSize: 14, fontWeight: 700, color: "#0f172a" },
-  viewAll: { fontSize: 12, color: "#3b82f6", fontWeight: 600 },
+  mid: { display: "flex", gap: 16 },
+  card: {
+    background: "#fff", borderRadius: 16,
+    border: "1px solid #e8ecf0",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+    overflow: "hidden",
+  },
+  cardHeader: {
+    display: "flex", justifyContent: "space-between", alignItems: "center",
+    padding: "16px 22px", borderBottom: "1px solid #f1f5f9",
+    background: "#fafafa",
+  },
+  cardTitle: { fontSize: 13.5, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.2px" },
+  viewAll: { fontSize: 12, color: "#3b82f6", fontWeight: 600, textDecoration: "none" },
 
-  statusList: { padding: "16px 22px", display: "flex", flexDirection: "column", gap: 16, minWidth: 280 },
+  statusList: { padding: "18px 22px", display: "flex", flexDirection: "column", gap: 14, minWidth: 280 },
   statusRow: { display: "flex", alignItems: "center", gap: 12 },
-  statusName: { fontSize: 13, fontWeight: 500, color: "#374151" },
-  barWrap: { flex: 1, height: 6, background: "#f1f5f9", borderRadius: 3, overflow: "hidden" },
-  bar: { height: "100%", borderRadius: 3, transition: "width 0.5s ease" },
-  statusMeta: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1, minWidth: 44 },
+  statusName: { fontSize: 13, fontWeight: 600, color: "#374151", minWidth: 72 },
+  barWrap: { flex: 1, height: 8, background: "#f1f5f9", borderRadius: 8, overflow: "hidden" },
+  bar: { height: "100%", borderRadius: 8, transition: "width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)" },
+  statusMeta: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 1, minWidth: 48 },
 
-  recentList: { padding: "8px 0", display: "flex", flexDirection: "column" },
-  recentRow: { display: "flex", alignItems: "center", gap: 12, padding: "12px 22px", borderBottom: "1px solid #f8fafc", transition: "background 0.15s" },
-  recentIcon: { width: 36, height: 36, borderRadius: 10, background: "#eff6ff", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  recentList: { padding: "4px 0", display: "flex", flexDirection: "column" },
+  recentRow: {
+    display: "flex", alignItems: "center", gap: 14,
+    padding: "13px 22px", borderBottom: "1px solid #f8fafc",
+    transition: "background 0.15s", cursor: "default",
+  },
+  recentIcon: {
+    width: 38, height: 38, borderRadius: 11,
+    background: "linear-gradient(135deg, #eff6ff, #dbeafe)",
+    display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+    boxShadow: "0 1px 4px rgba(59,130,246,0.15)",
+  },
   recentBody: { flex: 1, minWidth: 0 },
   recentTitle: { fontSize: 13.5, fontWeight: 600, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" },
   recentMeta: { display: "flex", alignItems: "center", gap: 4, fontSize: 11, color: "#94a3b8", marginTop: 3 },
-  badge: { fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 20, letterSpacing: "0.2px" },
-  price: { fontSize: 11, fontWeight: 600, color: "#64748b" },
-  empty: { padding: "24px 22px", color: "#94a3b8", fontSize: 13, textAlign: "center" },
+  badge: { fontSize: 10.5, fontWeight: 700, padding: "3px 9px", borderRadius: 20, letterSpacing: "0.2px" },
+  price: { fontSize: 11.5, fontWeight: 700, color: "#475569" },
+  empty: { padding: "32px 22px", color: "#94a3b8", fontSize: 13.5, textAlign: "center" },
 
   table: { width: "100%", borderCollapse: "collapse", fontSize: 13 },
-  th: { textAlign: "left", padding: "10px 22px", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc" },
+  th: { textAlign: "left", padding: "11px 22px", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", borderBottom: "1px solid #f1f5f9", background: "#f8fafc" },
   tr: { borderBottom: "1px solid #f8fafc" },
-  td: { padding: "12px 22px", verticalAlign: "middle" },
-  actionBtn: { padding: "4px 10px", borderRadius: 8, border: "1px solid", fontSize: 11, fontWeight: 600, cursor: "pointer" },
+  td: { padding: "13px 22px", verticalAlign: "middle" },
+  actionBtn: { padding: "5px 12px", borderRadius: 8, border: "1px solid", fontSize: 11.5, fontWeight: 600, cursor: "pointer" },
 
-  skeleton: { background: "linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.4s infinite", borderRadius: 8 },
+  skeleton: { background: "linear-gradient(90deg, #f1f5f9 25%, #e8ecf0 50%, #f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.4s infinite", borderRadius: 10 },
 };

@@ -322,6 +322,40 @@ a {
   background: var(--red);
 }
 
+/* ── Card hover lift ──────────────────────────────────────── */
+.card-hover {
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card-hover:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  transform: translateY(-1px);
+}
+
+/* ── Table row hover ──────────────────────────────────────── */
+tbody tr:hover td {
+  background: #f8fafc;
+}
+
+/* ── Scrollbar styling ────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+
+/* ── Input focus ring ─────────────────────────────────────── */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-glow) !important;
+}
+
+/* ── Page fade-in ─────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-fade { animation: fadeUp 0.3s ease; }
+
 /* ── Card ─────────────────────────────────────────────────── */
 .card {
   background: var(--surface);
