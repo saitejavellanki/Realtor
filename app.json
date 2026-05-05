@@ -10,7 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.saitejavellanki.realtor"
+      "bundleIdentifier": "com.saitejavellanki.realtor",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.saitejavellanki.realtor",

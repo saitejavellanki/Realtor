@@ -3262,9 +3262,11 @@ export default function HomeScreen() {
   const handleNavCTA = (tab: string) => {
     const validTab = tab as "home" | "saved" | "dashboard" | "profile";
     if (["home", "saved", "dashboard", "profile"].includes(validTab)) {
-      setSelectedProp(null);
-      setActiveTab(validTab);
-      setChatVisible(false);
+      closeChat();
+      setTimeout(() => {
+        setSelectedProp(null);
+        setActiveTab(validTab);
+      }, 300);
     }
   };
 
