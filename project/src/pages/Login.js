@@ -20,7 +20,16 @@ export default function Login() {
       saveToken(data.token);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Invalid credentials. Please try again.");
+      const msg = err.message || "";
+      if (msg.toLowerCase().includes("fetch") || msg.toLowerCase().includes("network") || msg.toLowerCase().includes("failed")) {
+        setError("Cannot reach the server. Please check your internet connection and try again.");
+      } else if (msg.toLowerCase().includes("invalid") || msg.toLowerCase().includes("credential") || msg.toLowerCase().includes("password") || msg.toLowerCase().includes("401")) {
+        setError("Invalid email or password. Please try again.");
+      } else if (msg.toLowerCase().includes("required")) {
+        setError("Email and password are required.");
+      } else {
+        setError(msg || "Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -38,7 +47,7 @@ export default function Login() {
                 <path d="M9 21v-7h6v7" fill="rgba(255,255,255,0.5)" />
               </svg>
             </div>
-            <span style={s.brandName}>PropAdmin</span>
+            <span style={s.brandName}>Realtor</span>
           </div>
 
           <div style={s.hero}>
@@ -65,7 +74,7 @@ export default function Login() {
       <div style={s.right}>
         <div style={s.formCard}>
           <div style={s.formHeader}>
-            <h2 style={s.formTitle}>Sign in to Admin</h2>
+            <h2 style={s.formTitle}>Sign in to Realtor</h2>
             <p style={s.formSub}>Enter your credentials to continue</p>
           </div>
 
@@ -130,7 +139,7 @@ export default function Login() {
           </form>
 
           <div style={s.hint}>
-            <span style={{ fontSize: 11, color: "#94a3b8" }}>Default: admin@realestate.com / admin123</span>
+            <span style={{ fontSize: 11, color: "#94a3b8" }}>Contact your administrator if you've forgotten your credentials.</span>
           </div>
         </div>
       </div>

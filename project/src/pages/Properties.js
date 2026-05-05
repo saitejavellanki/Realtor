@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import { useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
     FiEdit2,
     FiEye, FiEyeOff,
@@ -10,6 +9,7 @@ import {
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api";
+import { useToast } from "../components/Toast";
 
 const STATUS_OPTS = ["Available", "Sold", "Reserved", "Draft"];
 const APPROVAL_OPTS = ["Pending", "Approved", "Rejected"];
@@ -41,6 +41,7 @@ function PublishToggle({ value, onChange, disabled }) {
 
 export default function Properties() {
     const navigate = useNavigate();
+    const showToast = useToast();
     const [properties, setProperties] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -94,7 +95,7 @@ export default function Properties() {
             setVReports(r || []);
             setNewReport({ verified_by: "", notes: "", site_status: "" });
             load(); // refresh table to show verified status
-        } catch (err) { alert("Failed: " + err.message); }
+        } catch (err) { showToast("Failed to submit report: " + err.message, "error"); }
         finally { setReportSaving(false); }
     };
 
@@ -135,9 +136,10 @@ export default function Properties() {
                 local_updates: selected.local_updates || [],
             });
             setSaveSuccess(true);
+            showToast("Property saved successfully.", "success");
             setTimeout(() => { closeDrawer(); load(); }, 800);
         } catch (err) {
-            alert("Save failed: " + err.message);
+            showToast("Save failed: " + err.message, "error");
         } finally {
             setSaving(false);
         }
@@ -146,15 +148,15 @@ export default function Properties() {
     const handleDelete = async (id) => {
         if (!window.confirm("Delete this property? This cannot be undone.")) return;
         setDeleteId(id);
-        try { await api.deleteProperty(id); load(); }
-        catch (err) { alert("Delete failed: " + err.message); }
+        try { await api.deleteProperty(id); load(); showToast("Property deleted.", "success"); }
+        catch (err) { showToast("Delete failed: " + err.message, "error"); }
         finally { setDeleteId(null); }
     };
 
     const handleTogglePublic = async (id, current) => {
         setTogglingId(id);
-        try { await api.publishProperty(id, !current); load(); }
-        catch (err) { alert("Failed: " + err.message); }
+        try { await api.publishProperty(id, !current); load(); showToast(`Property ${!current ? "published" : "unpublished"}.`, "success"); }
+        catch (err) { showToast("Failed to update visibility: " + err.message, "error"); }
         finally { setTogglingId(null); }
     };
 

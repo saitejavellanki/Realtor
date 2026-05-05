@@ -106,10 +106,12 @@ export default function AddProperty() {
     const [position, setPosition] = useState({ lat: 17.3850, lng: 78.4867 });
     const [mapSearch, setMapSearch] = useState("");
     const [mapSearching, setMapSearching] = useState(false);
+    const [mapSearchError, setMapSearchError] = useState("");
     const [flyTarget, setFlyTarget] = useState(null);
 
     const handleMapSearch = async () => {
         if (!mapSearch.trim()) return;
+        setMapSearchError("");
         setMapSearching(true);
         try {
             const q = encodeURIComponent(mapSearch.trim() + ", Hyderabad, India");
@@ -119,11 +121,12 @@ export default function AddProperty() {
                 const loc = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
                 setPosition(loc);
                 setFlyTarget({ ...loc });
+                setMapSearchError("");
             } else {
-                alert("Location not found. Try a more specific search.");
+                setMapSearchError("Location not found. Try a more specific area name.");
             }
         } catch {
-            alert("Search failed. Check your internet connection.");
+            setMapSearchError("Search failed. Check your internet connection.");
         } finally {
             setMapSearching(false);
         }
@@ -510,7 +513,12 @@ export default function AddProperty() {
                                     {flyTarget && <FlyToPosition position={flyTarget} />}
                                 </MapContainer>
                             </div>
-                            <div style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
+                            {mapSearchError && (
+                                <div style={{ fontSize: 12, color: "#dc2626", marginTop: 6, display: "flex", alignItems: "center", gap: 6 }}>
+                                    <span>⚠</span> {mapSearchError}
+                                </div>
+                            )}
+                            <div style={{ fontSize: 12, color: "#64748b", marginTop: 4 }}>
                                 Lat: {position.lat?.toFixed(5)}, Lng: {position.lng?.toFixed(5)} — Click map to change or search above
                             </div>
                         </Field>

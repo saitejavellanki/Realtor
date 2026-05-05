@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isLoggedIn } from "../api";
+import { ToastProvider } from "../components/Toast";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
@@ -21,6 +22,7 @@ export default function AdminLayout() {
   if (!isLoggedIn()) return <Navigate to="/" replace />;
 
   return (
+    <ToastProvider>
     <div style={{ display: "flex", height: "100vh", overflow: "hidden", background: "#f1f5f9" }}>
       {/* Mobile backdrop */}
       {isMobile && sidebarOpen && (
@@ -42,5 +44,6 @@ export default function AdminLayout() {
         </main>
       </div>
     </div>
+    </ToastProvider>
   );
 }
