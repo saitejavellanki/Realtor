@@ -129,13 +129,13 @@ const s = {
   },
   divider: { height: 1, background: "rgba(255,255,255,0.06)", margin: "4px 0" },
   navSection: {
-    fontSize: 10, fontWeight: 700, color: "#334155",
+    fontSize: 10, fontWeight: 700, color: "#64748b",
     letterSpacing: "1px", padding: "12px 10px 8px",
   },
   nav: { display: "flex", flexDirection: "column", gap: 2 },
   navItem: {
     display: "flex", alignItems: "center", gap: 10, padding: "10px 10px",
-    borderRadius: 10, color: "#64748b", fontWeight: 500, fontSize: 13.5,
+    borderRadius: 10, color: "#94a3b8", fontWeight: 500, fontSize: 13.5,
     transition: "all 0.18s", textDecoration: "none", cursor: "pointer",
   },
   navItemActive: { background: "rgba(59,130,246,0.12)", color: "#60a5fa" },
