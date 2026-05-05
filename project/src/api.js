@@ -26,14 +26,19 @@ async function request(path, options = {}) {
 
     const res = await fetch(`${BASE_URL}${path}`, { ...options, headers });
 
+    const data = await res.json().catch(() => ({}));
+
     if (res.status === 401) {
-        clearToken();
-        window.location.href = '/login';
-        return;
+        if (getToken()) {
+            // Existing session expired — clear and redirect to login
+            clearToken();
+            window.location.href = '/';
+        }
+        // No token means this is a login attempt — throw so the form shows the error
+        throw new Error(data.error || 'Invalid credentials');
     }
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'API error');
+    if (!res.ok) throw new Error(data.error || `Request failed: ${res.status}`);
     return data;
 }
 
