@@ -23,7 +23,7 @@ export default function Sidebar({ isMobile, isOpen, onClose }) {
     setLoggingOut(true);
     localStorage.removeItem("re_admin_token");
     sessionStorage.clear();
-    setTimeout(() => navigate("/"), 800);
+    setTimeout(() => { window.location.href = "/"; }, 600);
   };
 
   const sidebarStyle = isMobile
